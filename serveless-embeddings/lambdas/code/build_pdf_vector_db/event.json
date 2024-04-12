@@ -1,0 +1,9 @@
+{
+    "location": "pdf_data/Amazon_Bedrock_User_Guide.pdf",
+    "vectorStoreLocation": "Amazon_Bedrock_User_Guide.vdb",
+    "bucketName": "YOU-BUCKET",
+    "vectorStoreType": "faiss",
+    "splitStrategy": "semantic",
+    "fileType": "application/pdf", 
+    "embeddingModel": "amazon.titan-embed-text-v1"
+  }

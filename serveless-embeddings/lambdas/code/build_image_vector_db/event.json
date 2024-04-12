@@ -1,0 +1,9 @@
+{
+    "location": "animals",
+    "vectorStoreLocation": "animals.vdb",
+    "bucketName": "YOU-BUCKET",
+    "vectorStoreType": "faiss",
+    "splitStrategy": "semantic",
+    "fileType": "application/pdf",
+    "embeddingModel": "amazon.titan-embed-image-v1"
+  }

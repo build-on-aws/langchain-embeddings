@@ -1,0 +1,8 @@
+{
+  "vectorStoreLocation": "Amazon_Bedrock_User_Guide.vdb",
+  "bucketName": "YOU-BUCKET",
+  "vectorStoreType": "faiss",
+  "query": "What is a prompt?",
+  "numDocs": 5,
+  "embeddingModel": "amazon.titan-embed-text-v1"
+}

@@ -1,0 +1,9 @@
+{
+  "location": "animals",
+  "vectorStoreLocation": "animalse.vdb",
+  "bucketName": "YOU-BUCKET",
+  "vectorStoreType": "faiss",
+  "InputType": "text",
+  "query": "cats",
+  "embeddingModel": "amazon.titan-embed-text-v1"
+}
