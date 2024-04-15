@@ -1,3 +1,16 @@
+"""
+EVENT
+{
+    "location": "YOU-KEY",
+    "vectorStoreLocation": "NAME.vdb",
+    "bucketName": "YOU-BUCKET",
+    "vectorStoreType": "faiss",
+    "splitStrategy": "semantic",
+    "fileType": "application/pdf", 
+    "embeddingModel": "amazon.titan-embed-text-v1"
+  }
+"""
+
 import json
 import os
 import boto3 

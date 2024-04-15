@@ -1,6 +1,6 @@
 {
-    "location": "pdf_data/Amazon_Bedrock_User_Guide.pdf",
-    "vectorStoreLocation": "Amazon_Bedrock_User_Guide.vdb",
+    "location": "YOU-KEY",
+    "vectorStoreLocation": "NAME.vdb",
     "bucketName": "YOU-BUCKET",
     "vectorStoreType": "faiss",
     "splitStrategy": "semantic",

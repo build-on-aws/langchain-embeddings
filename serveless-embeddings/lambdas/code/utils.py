@@ -1,6 +1,7 @@
 import json
 import boto3
 import os
+import errno
 
 s3                  = boto3.client('s3')
 
@@ -49,8 +50,24 @@ def download_file_from_folder(bucket, key, filename):
 
 def download_files_in_folder(bucket, folder,tmp_path):
     for obj in s3.list_objects(Bucket=bucket, Prefix=folder)['Contents']:
-        if obj['Key'] != folder:
-            download_file_from_folder(bucket, obj['Key'], f"{tmp_path}/{obj['Key'].split('/')[-1]}")
+        print(obj["Key"], len(obj["Key"].split("/")))
+        path = ""
+        len_int = len(obj["Key"].split("/"))-1
+        possition = 0
+        for k in obj["Key"].split("/"):
+            if possition == len_int:
+                break
+            path = path+"/"+k
+            possition += 1
+        path = path.lstrip("/")
+        print(path)
+        try:
+            os.makedirs(tmp_path+path)
+        except OSError as e:
+            if e.errno != errno.EEXIST:
+                raise
+        filename = tmp_path+ path +"/" + obj["Key"].split("/")[-1]
+        download_file_from_folder(bucket, obj['Key'],filename)
 
 def download_folder_s3(bucket_name, s3_prefix, local_folder):
     s3_objects = s3.list_objects_v2(Bucket=bucket_name, Delimiter='/', Prefix=s3_prefix)

@@ -1,3 +1,15 @@
+"""
+EVENT
+{
+    "location": "YOU-KEY",
+    "vectorStoreLocation": "NAME.vdb",
+    "bucketName": "YOU-BUCKET",
+    "vectorStoreType": "faiss",
+    "splitStrategy": "semantic",
+    "embeddingModel": "amazon.titan-embed-image-v1"
+  }
+"""
+
 import os
 import boto3
 import json
@@ -5,13 +17,15 @@ import base64
 from langchain_community.vectorstores import FAISS
 from io import BytesIO
 from PIL import Image
+import errno
+
 
 from utils import (upload_folder_s3, build_response, download_file,download_files_in_folder)
 
 
 bedrock_client              = boto3.client("bedrock-runtime")
 
-tmp_path                    = "/tmp"
+tmp_path                    = "/tmp/"
 
 s3_client = boto3.client('s3')
 
@@ -81,30 +95,25 @@ def check_size_image(file_path):
 
 def get_image_vectors_from_directory(path_name,embedding_model):
     items = []
-    sub_1 = os.listdir(path_name)
-    for n in sub_1:
-        if n.endswith('.jpg'):
-            file_path = os.path.join(path_name,n)
-            check_size_image(file_path)
-            vector = get_vector_from_file(file_path,embedding_model)
-            items.append((file_path, vector))
-        else:
-            for n_2 in os.listdir(path_name+"/"+n):
-                if n_2.endswith('.jpg'):
-                    file_path = os.path.join(path_name+"/"+n, n_2)
-                    check_size_image(file_path)
-                    vector = get_vector_from_file(file_path,embedding_model)
-                    items.append((file_path, vector))
-                else:
-                    print("no a .jpg file: ",n_2)
+    for folder in os.walk(path_name):
+        print(f'In {folder[0]} are {len(folder[2])} folder:')
+        for fichero in folder[2]:
+            if fichero.endswith('.jpg'):
+                file_path = os.path.join(folder[0],fichero)
+                print(file_path)
+                check_size_image(file_path)
+                vector = get_vector_from_file(file_path,embedding_model)
+                items.append((file_path, vector))
+            else:
+                print("no a .jpg file: ",fichero)
 
     return items
 
-def create_vector_db(type,path_name,embedding_model):
+def create_vector_db(bucket_name,type,path_name,embedding_model):
     image_vectors = get_image_vectors_from_directory(path_name,embedding_model)
         
     text_embeddings = [("", item[1]) for item in image_vectors]
-    metadatas = [{"image_path": item[0]} for item in image_vectors]
+    metadatas = [{"image_path": bucket_name+item[0].replace("/tmp","")} for item in image_vectors]
     if (type == "faiss"):
         db = FAISS.from_embeddings(
             text_embeddings=text_embeddings,
@@ -131,7 +140,7 @@ def lambda_handler(event, context):
 
     download_files_in_folder(bucket_name, location,local_file)
 
-    db                      = db = create_vector_db(vectorStore_type,local_file,embedding_model)
+    db                      = db = create_vector_db(bucket_name,vectorStore_type,local_file,embedding_model)
     print(f"Vector Database:{db.index.ntotal} docs")
 
     db_file                 = f"{tmp_path}/{file_name.split(".")[0]}.vdb"
