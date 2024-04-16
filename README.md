@@ -68,6 +68,10 @@ Event to trigger:
     "embeddingModel": "amazon.titan-embed-text-v1"
   }
 ```
+| Event  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_1_pdf.jpg)|![Diagram](imagens/result_1_pdf.jpg)|
+|||
 
 - [To generate embeddings for images](serveless-embeddings/lambdas/code/build_image_vector_db/lambda_function.py).
 
@@ -83,6 +87,12 @@ Event to trigger:
     "embeddingModel": "amazon.titan-embed-image-v1"
   }
 ```
+
+| Event  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_1_image.jpg)|![Diagram](imagens/result_1_image.jpg)|
+|||
+
 
 >Learn [how test Lambda Functions in the console](https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html) with test events. 
 
@@ -107,6 +117,10 @@ Event to trigger:
 }
 
 ```
+| Event  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_2_pdf.jpg)|![Diagram](imagens/result_2_pdf.jpg)|
+|||
 
 - [To retrieval image location from a vector DB](serveless-embeddings/lambdas/code/pdf_retriever_lambda/lambda_function.py)
 
@@ -124,18 +138,28 @@ You can search by text or by image
 }
 ```
 
+| Event  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_2_image.jpg)|![Diagram](imagens/result_2_image.jpg)|
+|||
+
 - Image event to trigger
 ```json
 {
   "vectorStoreLocation": "REPLACE-NAME.vdb",
   "bucketName": "REPLACE-YOU-BUCKET",
   "vectorStoreType": "faiss",
-  "InputType": "text",
+  "InputType": "image",
   "query":"IMAGE-BUCKET-LOCATION-QUERY",
   "embeddingModel": "amazon.titan-embed-text-v1"
 }
 ```
+| Event  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_3_image.jpg)|![Diagram](imagens/result_3_image.jpg)|
+|||
 
+> 💡 The next step is to take the `image_path` value and download the file from Amazon S3 bucket with a [download_file boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-example-download-file.html) method. 
 
 ### 🚀 Let's build!
 
