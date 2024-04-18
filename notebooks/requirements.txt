@@ -1,0 +1,4 @@
+boto3
+langchain
+faiss-cpu
+psycopg2

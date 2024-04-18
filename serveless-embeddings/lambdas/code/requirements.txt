@@ -5,3 +5,5 @@ faiss-cpu
 pypdf
 boto3
 pillow
+sqlalchemy
+langchain_postgres

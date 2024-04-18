@@ -1,22 +1,20 @@
 ![Diagram](imagens/portada.jpg)
 
-# Building a Multimodal Search Engine for Text and Image with Amazon Titan Embeddings, Amazon Bedrock and LangChain.
+# Building a Multimodal Search Engine for Text and Image with Amazon Titan Embeddings, Amazon Bedrock, Amazon Aurora and LangChain.
 
-This repo demonstrates how to build a multimodal search engine using [Amazon Titan Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html), Amazon Bedrock, and [LangChain](https://python.langchain.com/docs/get_started/introduction). It covers generating text and image embeddings with Titan's state-of-the-art models, enabling semantic search and retrieval. Through Jupyter notebooks, it guides you through loading text from PDFs, generating text embeddings, splitting text into meaningful chunks with LangChain, and storing these embeddings in a [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database for efficient search and retrieval operations.
-
-The repo also covers building an image search application using Amazon Titan Multimodal Embeddings and LangChain, including how to generate embeddings for images, create a vector database specifically for image data, and query the database to retrieve relevant images based on their visual content.
+This repository demonstrates how to build a multimodal search engine using [Amazon Titan Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html), Amazon Bedrock, and [LangChain](https://python.langchain.com/docs/). It covers generating state-of-the-art text and image embeddings with Titan's models, enabling semantic search and retrieval capabilities. Through Jupyter notebooks, it guides you through loading text from PDFs, generating text embeddings, splitting text into meaningful chunks using LangChain, and storing these embeddings in a [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database and the PostgreSQL-compatible [Amazon Aurora](https://aws.amazon.com/rds/aurora/) database for efficient search and retrieval operations.
 
 In a second part you'll build a Serveless Embedding APP leverage [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to create four [AWS Lambda Functions](https://aws.amazon.com/lambda/): two responsible for embedding text and image files, and two for retrieving documents based on text or image queries. These Lambda functions will be designed to be invoked through events invocations, providing a scalable and serverless solution for my multimodal search engine.
 
 By the end of this post, I'll have a solid understanding of how to:
 
-- Load text from PDF files
-- Generate embeddings for text and images using Amazon Titan Embeddings
-- Split text into semantically meaningful chunks using LangChain
-- Create local vector databases for text and image data using FAISS
-- Build an image search application leveraging Titan Multimodal Embeddings
-- Query the vector databases for relevant text documents and image file 
-- Deploy Lambda Functions for embedding and retrieval using AWS CDK
+- Load PDF text and generate text/image embeddings using Amazon Titan Embeddings
+- Chunk text into semantic segments with LangChain
+- Create local FAISS vector databases for text and images
+- Build an image search app leveraging Titan Multimodal Embeddings  
+- Store vector embeddings in Amazon Aurora with pgvector extension
+- Query vector databases for relevant text documents and images
+- Deploy Lambda functions for embedding/retrieval using AWS CDK
 
 Get ready to unlock the power of multi-modal search and unlock new possibilities in my apps!
 
@@ -31,19 +29,27 @@ Get ready to unlock the power of multi-modal search and unlock new possibilities
 💰 **Cost to complete**: 
 - [Amazon Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
 
-### [Build a PDF Vector Data Base](notebooks/build_pdf_vector_db.ipynb):
+### [Semantic Search with LangChain, Amazon Titan Embeddings, and FAISS](/notebooks/01_build_pdf_vector_db.ipynb):
 
 Jupyter notebook for loading documents from PDFs, extracting and splitting text into semantically meaningful chunks using [LangChain](https://python.langchain.com/docs/get_started/introduction), generating text embeddings from those chunks utilizing an , generating embeddings from the text using an  [Amazon Titan Embeddings G1 - Text models](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html), and storing the embeddings in a [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database for retrieval.
 
-### [Build a Image Vector Data Base](notebooks/build_images_vector_db.ipynb):
+### [Building a Multimodal Image Search App with Titan Embeddings and LangChain](/notebooks/02_build_images_vector_db.ipynb):
 
-In this notebook, you will build an image search application with [Titan Multimodal Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-multiemb-models.html) and [LangChain](https://python.langchain.com/docs/get_started/introduction), and then storing those embeddings in [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database for later search.
+This notebook demonstrates how to combine [Titan Multimodal Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-multiemb-models.html), [LangChain](https://python.langchain.com/docs/get_started/introduction) and [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) to build a capable image search application. Titan's embeddings allow representing images and text in a common dense vector space, enabling natural language querying of images. FAISS provides a fast, scalable way to index and search those vectors. And LangChain offers abstractions to hook everything together and surface relevant image results based on a user's query.
+
+By following the steps outlined, you'll be able to preprocess images, generate embeddings, load them into FAISS, and write a simple application that takes in a natural language query, searches the FAISS index, and returns the most semantically relevant images. It's a great example of the power of combining modern AI technologies to build applications.
+
+
+### [Supercharging Vector Similarity Search with Amazon Aurora and pgvector](/notebooks/03_build_pgvector_db.ipynb):
+
+In this Jupyter Notebook, you'll explore how to store vector embeddings in a vector database using [Amazon Aurora](https://aws.amazon.com/es/rds/aurora/) and the pgvector extension. This approach is particularly useful for applications that require efficient similarity searches on high-dimensional data, such as natural language processing, image recognition, and recommendation systems.
 
 ## Serveless Embedding APP
 
 💰 **Cost to complete**: 
 - [Amazon Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
 - [Amazon Lambda Pricing](https://aws.amazon.com/lambda/pricing/)
+- [Aurora Pricing]()
 
 In the second part, you'll construct a Serverless Embedding App utilizing the AWS Cloud Development Kit (CDK) to create four Lambda Functions. 
 
