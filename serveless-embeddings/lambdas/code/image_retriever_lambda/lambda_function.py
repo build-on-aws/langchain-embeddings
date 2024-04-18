@@ -59,7 +59,7 @@ def lambda_handler(event, context):
 
     query                   = event.get("query")
     embedding_model         = event.get("embeddingModel")
-    input_type                = event.get("InputType")
+    input_type              = event.get("InputType")
 
     query                   = query if query else ""
 

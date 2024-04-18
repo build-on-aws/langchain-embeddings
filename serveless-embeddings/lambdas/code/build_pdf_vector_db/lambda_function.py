@@ -94,26 +94,6 @@ def lambda_handler(event, context):
   
     print(f"vectordb was uploaded in {vector_location}")
 
-    if event.get("busName"):
-        source = "Index.Documents"
-        if event.get("source"):
-            source = event.get("source")
-
-        # put_event tu event bridge bus defined in busName
-        bus_name = event.get("busName")
-        print(f"put event to bus:{bus_name}")
-        event_bridge = boto3.client('events')
-        event_bridge.put_events(
-            Entries=[
-                {
-                    'Source': source,
-                    'DetailType': 'DocumentProcessor.Finish',
-                    'Detail': json.dumps(event),
-                    'EventBusName': bus_name,
-                    'Resources': ['0']
-                }
-            ]
-        )
         
     return build_response(200, json.dumps(event))
 

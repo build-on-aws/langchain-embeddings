@@ -16,6 +16,8 @@ class ServelessEmbeddingsStack(Stack):
         CREATE_IMAGE_VECTOR_DB_ARN = Fn.create_image_vector_db.function_arn
         RETRIEVE_VECTOR_DB_ARN = Fn.retriever.function_arn
         RETRIEVE_IMAGE_VECTOR_DB_ARN = Fn.retriever_image.function_arn
+        RETRIEVE_AURORA_DB_ARN = Fn.retrieveraurorapostresql.function_arn
+        BUILD_AURORA_DB_ARN = Fn.buildaurorapostresql.function_arn
        
 
         parameter = {
@@ -23,6 +25,8 @@ class ServelessEmbeddingsStack(Stack):
             "RETRIEVE_VECTOR_DB_ARN": RETRIEVE_VECTOR_DB_ARN,
             "CREATE_IMAGE_VECTOR_DB_ARN": CREATE_IMAGE_VECTOR_DB_ARN,
             "RETRIEVE_IMAGE_VECTOR_DB_ARN": RETRIEVE_IMAGE_VECTOR_DB_ARN,
+            "BUILD_AURORA_DB_ARN" : BUILD_AURORA_DB_ARN,
+            "RETRIEVE_AURORA_DB_ARN": RETRIEVE_AURORA_DB_ARN,
         }
 
         ssm.StringParameter(self, "api", parameter_name="vector_lambdas", string_value=json.dumps(parameter))   

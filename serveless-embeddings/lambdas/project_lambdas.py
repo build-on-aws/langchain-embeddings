@@ -30,7 +30,6 @@ class Lambdas(Construct):
         # Lambda Crea el Vector DB
         # ======================================================================
 
-
         self.create_vector_db = aws_lambda.DockerImageFunction(
             self, "VectorDB",  
             memory_size=1024,
@@ -83,9 +82,36 @@ class Lambdas(Construct):
                 ),
             **BASE_LAMBDA_CONFIG)
         
+        # ======================================================================
+        # Build PostreSQL Vector DB
+        # ======================================================================
+        
+        self.buildaurorapostresql = aws_lambda.DockerImageFunction(
+            self, "BuildAuroraPostreSQl",
+            memory_size=256,
+
+            code=aws_lambda.DockerImageCode.from_image_asset(
+                "./lambdas/code/",
+                cmd = [ "build_aurora_postgre_vector_db/lambda_function.lambda_handler" ],
+                ),
+            **BASE_LAMBDA_CONFIG)
+        
+        # ======================================================================
+        # Retrieves PostreSQL Vector DB 
+        # ======================================================================
+        
+        self.retrieveraurorapostresql = aws_lambda.DockerImageFunction(
+            self, "RetrieveAuroraPostreSQl",
+            memory_size=256,
+
+            code=aws_lambda.DockerImageCode.from_image_asset(
+                "./lambdas/code/",
+                cmd = [ "postgre_retriever_lambda/lambda_function.lambda_handler" ],
+                ),
+            **BASE_LAMBDA_CONFIG)
 
 
-        for f in [self.retriever, self.create_vector_db, self.create_image_vector_db, self.retriever_image ]:
+        for f in [self.retriever, self.create_vector_db, self.create_image_vector_db, self.retriever_image, self.retrieveraurorapostresql, self.buildaurorapostresql ]:
             f.add_to_role_policy(iam.PolicyStatement(actions=['s3:*'],resources=["*"]))
             f.add_to_role_policy(iam.PolicyStatement(actions=['bedrock:*'],resources=["*"]))
             f.add_to_role_policy(iam.PolicyStatement( actions=["events:PutEvents"], resources=['*']))
