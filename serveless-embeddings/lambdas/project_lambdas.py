@@ -121,3 +121,6 @@ class Lambdas(Construct):
                 principal=iam.AnyPrincipal(),action="lambda:invokeFunction",
                 # source_arn=f"arn:aws:lambda:{self.region}:{self.account}:*"
         )
+            
+        for n in [self.retrieveraurorapostresql, self.buildaurorapostresql ]:
+            n.add_to_role_policy(iam.PolicyStatement(actions=["ec2:CreateNetworkInterface"], resources=["*"]))

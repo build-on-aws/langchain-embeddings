@@ -106,7 +106,7 @@ Event to trigger:
 
 ![Diagram](imagens/event_1_aurora.jpg)
 
-> 💡 Before testing this Lambda Function keep in mind that it must be in the same VPC and be able to access the Amazon Aurora PostreSQL DB, for that check [Automatically connecting a Lambda function and an Aurora DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/lambda-rds-connect.html).
+> 💡 Before testing this Lambda Function keep in mind that it must be in the same VPC and be able to access the Amazon Aurora PostreSQL DB, for that check [Automatically connecting a Lambda function and an Aurora DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/lambda-rds-connect.html) and [Creating access points restricted to a virtual private cloud](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-vpc.html?icmpid=docs_amazons3_console) for your Amazon S3 Bucket [Gateway endpoints for Amazon S3](https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html#create-gateway-endpoint-s3)
 
 Event to trigger: 
 
