@@ -2,19 +2,19 @@
 
 # Building a Multimodal Search Engine for Text and Image with Amazon Titan Embeddings, Amazon Bedrock, Amazon Aurora and LangChain.
 
-This repository demonstrates how to build a multimodal search engine using [Amazon Titan Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html), Amazon Bedrock, and [LangChain](https://python.langchain.com/docs/). It covers generating state-of-the-art text and image embeddings with Titan's models, enabling semantic search and retrieval capabilities. Through Jupyter notebooks, it guides you through loading text from PDFs, generating text embeddings, splitting text into meaningful chunks using LangChain, and storing these embeddings in a [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database and the PostgreSQL-compatible [Amazon Aurora](https://aws.amazon.com/rds/aurora/) database for efficient search and retrieval operations.
+This repository demonstrates how to build a multimodal search engine using [Amazon Titan Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html), Amazon Bedrock, and [LangChain](https://python.langchain.com/docs/). It covers generating state-of-the-art text and image embeddings with Titan's models, enabling semantic search and retrieval capabilities. Through Jupyter notebooks, it guides you through loading text from PDFs, generating text embeddings, splitting text into meaningful chunks using LangChain, and storing these embeddings in a [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database and the PostgreSQL-compatible [Amazon Aurora](https://aws.amazon.com/rds/aurora/) PostgreSQL database for efficient search and retrieval operations.
 
 In a second part you'll build a Serveless Embedding APP leverage [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to create four [AWS Lambda Functions](https://aws.amazon.com/lambda/): two responsible for embedding text and image files, and two for retrieving documents based on text or image queries. These Lambda functions will be designed to be invoked through events invocations, providing a scalable and serverless solution for my multimodal search engine.
 
 By the end of this post, I'll have a solid understanding of how to:
 
-- Load PDF text and generate text/image embeddings using Amazon Titan Embeddings
-- Chunk text into semantic segments with LangChain
-- Create local FAISS vector databases for text and images
-- Build an image search app leveraging Titan Multimodal Embeddings  
-- Store vector embeddings in Amazon Aurora with pgvector extension
-- Query vector databases for relevant text documents and images
-- Deploy Lambda functions for embedding/retrieval using AWS CDK
+- Load PDF text and generate text/image embeddings using Amazon Titan Embeddings.
+- Chunk text into semantic segments with LangChain.
+- Create local FAISS vector databases for text and images.
+- Build an image search app leveraging Titan Multimodal Embeddings.  
+- Store vector embeddings in Amazon Aurora PostgreSQL with pgvector extension.
+- Query vector databases for relevant text documents and images.
+- Deploy Lambda functions for embedding/retrieval using AWS CDK.
 
 Get ready to unlock the power of multi-modal search and unlock new possibilities in my apps!
 
