@@ -26,6 +26,8 @@ Get ready to unlock the power of multi-modal search and unlock new possibilities
 - [Configure AWS credentials](https://docs.aws.amazon.com/braket/latest/developerguide/braket-using-boto3.html) - Boto3 needs credentials to make API calls to AWS.
 - Install [Langchain](https://python.langchain.com/docs/get_started/introduction), a framework for developing applications powered by large language models (LLMs). Install with `pip install langchain`.
 
+> [Getting started with Amazon Bedrock, RAG, and Vector database in Python](https://github.com/build-on-aws/llm-rag-vectordb-python)
+
 💰 **Cost to complete**: 
 - [Amazon Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
 
@@ -317,6 +319,7 @@ Now you have the tools to create your own multimodal search engines, unlocking n
 
 ## 🚀 Some links for you to continue learning and building:
 
+- [Getting started with Amazon Bedrock, RAG, and Vector database in Python](https://github.com/build-on-aws/llm-rag-vectordb-python)
 - [Building with Amazon Bedrock and LangChain](https://catalog.workshops.aws/building-with-amazon-bedrock/en-US)
 - [How To Choose Your LLM](https://community.aws/posts/how-to-choose-your-llm)
 - [Working With Your Live Data Using LangChain](https://community.aws/posts/working-with-your-live-data-using-langchain)
