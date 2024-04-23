@@ -9,7 +9,7 @@ This repository demonstrates the construction of a state-of-the-art multimodal s
 Amazon Aurora allows you to maintain both traditional application data and vector embeddings within the same database. This unified approach enhances governance and enables faster deployment, while minimizing the learning curve.
 
 
-In a second part you'll build a Serveless Embedding APP leverage [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to create four [AWS Lambda Functions](https://aws.amazon.com/lambda/): two responsible for embedding text and image files, and two for retrieving documents based on text or image queries. These Lambda functions will be designed to be invoked through events invocations, providing a scalable and serverless solution for my multimodal search engine.
+In a second part you'll build a Serveless Embedding APP leverage [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to create four [AWS Lambda Functions](https://aws.amazon.com/lambda/): responsible for embedding text and image files, and for retrieving documents based on text or image queries. These Lambda functions will be designed to be invoked through events invocations, providing a scalable and serverless solution for my multimodal search engine.
 
 By the end of this post, I'll have a solid understanding of how to:
 
