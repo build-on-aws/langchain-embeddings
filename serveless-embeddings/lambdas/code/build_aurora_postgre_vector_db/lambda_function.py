@@ -2,15 +2,15 @@
 EVENT
 {
     "location": "YOU-KEY",
-    "collectioName": "YOU-COLLECTION-NAME",
-    "bucketName": "YOU-BUCKET",
-    "fileType": "image or pdf",
-    "embeddingModel": "amazon.titan-embed-image-v1", 
-    "llmModel": "anthropic.claude-3-sonnet-20240229-v1:0",
-    "PGVECTOR_USER":"PGVECTOR_USER",
-    "PGVECTOR_PASSWORD":"PGVECTOR_PASSWORD",
-    "PGVECTOR_HOST":"PGVECTOR_HOST",
-    "PGVECTOR_DATABASE":"PGVECTOR_DATABASE"
+    "bucketName": "YOU-BUCKET-NAME",
+    "fileType": "pdf or image",
+    "embeddingModel": "amazon.titan-embed-text-v1", 
+    "PGVECTOR_USER":"YOU-PGVECTOR_USER,
+    "PGVECTOR_PASSWORD":"YOU-PGVECTOR_PASSWORD",
+    "PGVECTOR_HOST":"YOU-PGVECTOR_HOST",
+    "PGVECTOR_DATABASE":"YOU-PGVECTOR_DATABASE"
+    "PGVECTOR_PORT":"5432",
+    "collectioName": "YOU-collectioName"
   }
 """
 
@@ -20,26 +20,25 @@ import json
 import base64
 import os
 from PIL import Image
+import psycopg
 
-from sqlalchemy import create_engine
 from langchain_community.embeddings import BedrockEmbeddings # to create embeddings for the documents.
 from langchain_experimental.text_splitter import SemanticChunker # to split documents into smaller chunks.
-from langchain.docstore.document import Document
 from langchain_postgres import PGVector
 from langchain_postgres.vectorstores import PGVector
 from langchain_community.document_loaders import PyPDFLoader
 
-
-from utils import (build_response, download_file)
+from utils import (download_file,    download_files_in_folder)
 
 tmp_path                    = "/tmp"
 
-bedrock_client              = boto3.client("bedrock-runtime") 
+
 
 
 # function to create vector store
 def create_vectorstore(embeddings,collection_name,conn):
-                       
+    print(f"creating vectorstore for {collection_name}")
+                    
     vectorstore = PGVector(
         embeddings=embeddings,
         collection_name=collection_name,
@@ -49,14 +48,18 @@ def create_vectorstore(embeddings,collection_name,conn):
     return vectorstore
 
 def load_and_split_pdf_semantic(file_path, embeddings):
+    print(f"loading and splitting pdf: {file_path}")
     text_splitter = SemanticChunker(embeddings, breakpoint_threshold_amount= 80)
+    print(f"text_splitter")
     loader = PyPDFLoader(file_path)
+    print(f"loader")
     docs = loader.load_and_split(text_splitter)
     print(f"docs:{len(docs)}")
     return docs
 
 #calls Bedrock to get a vector from either an image, text, or both
-def get_multimodal_vector(input_image_base64=None, input_text=None):
+def get_multimodal_vector(bedrock_client,input_image_base64=None, input_text=None):
+    print(f"get_multimodal_vector")
     request_body = {}
     if input_text:
         request_body["inputText"] = input_text
@@ -78,13 +81,15 @@ def get_multimodal_vector(input_image_base64=None, input_text=None):
     
     return embedding
 
-def image_to_base64(image_path):
+def image_to_base64(image_path,bedrock_client):
+    print(f"image_to_base64 image_path:{image_path}")
     with open(image_path, "rb") as image_file:
         encoded_string = base64.b64encode(image_file.read()).decode("utf-8")
-    vector = get_multimodal_vector(input_image_base64=encoded_string)
+    vector = get_multimodal_vector(bedrock_client,input_image_base64=encoded_string)
     return encoded_string, vector
 
 def check_size_image(file_path):
+    print(f"check_size_image file_path:{file_path}")
     # Maximum image size supported is 2048 x 2048 pixel
     image = Image.open(file_path) #open image
     width, height = image.size # Get the width and height of the image in pixels
@@ -108,9 +113,11 @@ def check_size_image(file_path):
  
     return
 
-def get_image_vectors_from_directory(path_name):
+def get_image_vectors_from_directory(path_name,bedrock_client):
+    print(f"get_image_vectors_from_directory:{path_name}")
     documents = []
     embeddings = []
+
     for folder in os.walk(path_name):
         #print(f'In {folder[0]} are {len(folder[2])} folder:')
         for fichero in folder[2]:
@@ -118,7 +125,7 @@ def get_image_vectors_from_directory(path_name):
                 file_path = os.path.join(folder[0], fichero)
                 #print(file_path)
                 check_size_image(file_path)
-                image_base64, image_embedding = image_to_base64(file_path)
+                image_base64, image_embedding = image_to_base64(file_path,bedrock_client)
                 documents.append({"page_content": image_base64, "file_path": file_path})
                 embeddings.append(image_embedding)
             else:
@@ -134,39 +141,61 @@ def lambda_handler(event, context):
     bucket_name             = event.get("bucketName")
     file_type               = event.get("fileType")
     embedding_model         = event.get("embeddingModel")
+    bedrock_endpoint = event.get("bedrockEndpoint")
+     
 
     user = event.get("PGVECTOR_USER")
     password = event.get("PGVECTOR_PASSWORD")
     host = event.get("PGVECTOR_HOST")
     database = event.get("PGVECTOR_DATABASE")
+    port = event.get("PGVECTOR_PORT")
 
-    # Create the SQLAlchemy engine
-    engine = create_engine(f"postgresql://{user}:{password}@{host}/{database}") 
-    
+    connection = f"postgresql+psycopg://{user}:{password}@{host}:{port}/{database}" 
+    print(f"connection:{connection}")
     file_name              = location.split("/")[-1]
     local_file             = f"{tmp_path}/{file_name}"
 
-    print(f"dowload from s3://{bucket_name}{location} to {local_file}")
-    download_file(bucket_name,location, local_file)
+    if bedrock_endpoint : 
+        bedrock_client = boto3.client("bedrock-runtime", endpoint_url = bedrock_endpoint) # If the lambda function is inside a VPC
+    else: 
+        bedrock_client = boto3.client("bedrock-runtime")
+
 
     bedrock_embeddings          = BedrockEmbeddings(model_id=embedding_model,client=bedrock_client)
 
+    conn = psycopg.connect(
+                   conninfo = f"postgresql://{user}:{password}@{host}:{port}/{database}"
+                       )
+    #Create a cursor to run queries
+    cur = conn.cursor()
+
+    value_cur = cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+    print(value_cur)
+
     if file_type == "pdf":
+        print(f"Is pdf file" )
+        print(f"dowload from s3://{bucket_name}/{location} to {local_file}")
+        download_file(bucket_name,location, local_file)
+        vectorstore = create_vectorstore(bedrock_embeddings,collection_name,connection)
+        print("To create docs")
         docs = load_and_split_pdf_semantic(local_file, bedrock_embeddings)
-        vectorstore = create_vectorstore(bedrock_embeddings,collection_name,engine)
         # Add documents to the vectorstore
         vectorstore.add_documents(docs)
-        print(f"Vector Database Done:{vectorstore.index.ntotal} docs")
+        print(f"Vector Database Done:{vectorstore} docs")
 
     elif file_type == "image":
-        documents, embeddings = get_image_vectors_from_directory(local_file)
-        image_vectorstore = create_vectorstore(bedrock_embeddings,collection_name,engine)
+        print(f"Is image file" )
+        print(f"dowload from s3://{bucket_name}/{location} to {local_file}")
+        download_files_in_folder(bucket_name, location,local_file)
+        vectorstore = create_vectorstore(bedrock_embeddings,collection_name,connection)
+        documents, embeddings = get_image_vectors_from_directory(local_file,bedrock_client)
         texts = [d.get("file_path") for d in documents]
         metadata = [{"file_path": d.get("file_path")} for d in documents]
-        image_vectorstore.add_embeddings(embeddings=embeddings, texts=texts, metadata=metadata)
-        print(f"Vector Database Done:{image_vectorstore.index.ntotal} docs")
-
-    return build_response(200, json.dumps(event))
+        print("To create docs")
+        vectorstore.add_embeddings(embeddings=embeddings, texts=texts, metadata=metadata)
+        print(f"Vector Database Done:{vectorstore} docs")
+    print(f"Event done")
+    return 200
 
     
 

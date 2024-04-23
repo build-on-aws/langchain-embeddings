@@ -1,8 +1,14 @@
 {
-  "vectorStoreLocation": "animalse.vdb",
+  "location": "YOU-KEY",
+  "collectioName": "YOU-COLLECTION-NAME",
   "bucketName": "YOU-BUCKET",
-  "vectorStoreType": "faiss",
-  "InputType": "text",
-  "query": "cats",
-  "embeddingModel": "amazon.titan-embed-text-v1"
+  "fileType": "image or pdf",
+  "embeddingModel": "amazon.titan-embed-image-v1", 
+  "llmModel": "anthropic.claude-3-sonnet-20240229-v1:0",
+  "QUERY": "YOU QUESTION",
+  "PGVECTOR_USER":"PGVECTOR_USER",
+  "PGVECTOR_PASSWORD":"PGVECTOR_PASSWORD",
+  "PGVECTOR_HOST":"PGVECTOR_HOST",
+  "PGVECTOR_DATABASE":"PGVECTOR_DATABASE",
+  "PGVECTOR_PORT":"PGVECTOR_PORT"
 }

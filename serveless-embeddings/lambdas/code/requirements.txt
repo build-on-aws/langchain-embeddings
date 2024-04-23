@@ -5,5 +5,6 @@ faiss-cpu
 pypdf
 boto3
 pillow
+psycopg[binary]
+langchain-postgres
 sqlalchemy
-langchain_postgres

@@ -106,24 +106,35 @@ Event to trigger:
 
 ![Diagram](imagens/event_1_aurora.jpg)
 
-> 💡 Before testing this Lambda Function keep in mind that it must be in the same VPC and be able to access the Amazon Aurora PostreSQL DB, for that check [Automatically connecting a Lambda function and an Aurora DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/lambda-rds-connect.html) and [Creating access points restricted to a virtual private cloud](https://docs.aws.amazon.com/AmazonS3/latest/userguide/access-points-vpc.html?icmpid=docs_amazons3_console) for your Amazon S3 Bucket [Gateway endpoints for Amazon S3](https://docs.aws.amazon.com/vpc/latest/privatelink/vpc-endpoints-s3.html#create-gateway-endpoint-s3)
+> 💡 Before testing this Lambda Function keep in mind that it must be in the same VPC and be able to access the Amazon Aurora PostreSQL DB, for that check [Automatically connecting a Lambda function and an Aurora DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/lambda-rds-connect.html), [Using Amazon RDS Proxy for Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/rds-proxy.html) and [Use interface VPC endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/bedrock/latest/userguide/usingVPC.html#vpc-interface-endpoints) for Amazon Bedrock VPC endpoint. 
 
 Event to trigger: 
 
 ```json
 {
-    "location": "YOU-KEY",
-    "collectioName": "YOU-COLLECTION-NAME",
-    "bucketName": "YOU-BUCKET",
-    "fileType": "image or pdf",
-    "embeddingModel": "amazon.titan-embed-image-v1", 
-    "llmModel": "anthropic.claude-3-sonnet-20240229-v1:0",
-    "PGVECTOR_USER":"PGVECTOR_USER",
-    "PGVECTOR_PASSWORD":"PGVECTOR_PASSWORD",
-    "PGVECTOR_HOST":"PGVECTOR_HOST",
-    "PGVECTOR_DATABASE":"PGVECTOR_DATABASE"
-  }
+  "location": "YOU-KEY",
+  "bucketName": "YOU-BUCKET-NAME",
+  "fileType": "pdf or image",
+  "embeddingModel": "amazon.titan-embed-text-v1", 
+  "PGVECTOR_USER":"YOU-RDS-USER",
+  "PGVECTOR_PASSWORD":"YOU-RDS-PASSWORD",
+  "PGVECTOR_HOST":"YOU-RDS-ENDPOINT-PROXY",
+  "PGVECTOR_DATABASE":"YOU-RDS-DATABASE",
+  "PGVECTOR_PORT":"5432",
+  "collectioName": "YOU-collectioName",
+  "bedrock_endpoint": "https://vpce-...-.....bedrock-runtime.YOU-REGION.vpce.amazonaws.com"
+}
 ```
+
+| Event PDF  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_4_pdf.jpg)|![Diagram](imagens/response_4_pdf.jpg)|
+|||
+
+| Event Image  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_4_image.jpg)|![Diagram](imagens/response_4_image.jpg)|
+|||
 
 ### AWS Lambda Funtions to Query for Text and Image Files in a Vector DB:
 
@@ -194,6 +205,40 @@ You can search by text or by image
 
 ![Diagram](imagens/response_1_aurora.jpg)
 
+```json
+{
+  "location": "YOU-KEY",
+  "bucketName": "YOU-BUCKET-NAME",
+  "fileType": "pdf or image",
+  "embeddingModel": "amazon.titan-embed-text-v1", 
+  "PGVECTOR_USER":"YOU-RDS-USER",
+  "PGVECTOR_PASSWORD":"YOU-RDS-PASSWORD",
+  "PGVECTOR_HOST":"YOU-RDS-ENDPOINT-PROXY",
+  "PGVECTOR_DATABASE":"YOU-RDS-DATABASE",
+  "PGVECTOR_PORT":"5432",
+  "collectioName": "YOU-collectioName",
+  "bedrock_endpoint": "https://vpce-...-.....bedrock-runtime.YOU-REGION.vpce.amazonaws.com",
+  "QUERY": "YOU-TEXT-QUESTION"
+  }
+```
+
+> 💡 Use `location` and `bucketName`to deliver image location to make a query.
+
+| Event PDF  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_5_pdf.jpg)|![Diagram](imagens/response_5_pdf.jpg)|
+|||
+
+| Event Image Query Text  |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_6_image.jpg)|![Diagram](imagens/response_6_image.jpg)|
+|||
+
+| Event Image Query Image |Executing function: succeeded |
+|---|---|
+|![Diagram](imagens/event_7_image.jpg)|![Diagram](imagens/response_7_image.jpg)|
+|||
+
 ### 🚀 Let's build!
 
 The Amazon Lambdas that you build in this deployment are created with a [container images](https://docs.aws.amazon.com/lambda/latest/dg/images-create.html), you must have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and active in your computer. 
@@ -251,7 +296,7 @@ cdk synth
 cdk deploy
 ```
 
-**Clean the house!:**
+**🧹 Clean the house!:**
 
 If you finish testing and want to clean the application, you just have to follow these two steps:
 
@@ -264,7 +309,7 @@ cdk destroy
 
 ## Conclusion:
 
-In this post, you built a powerful multimodal search engine capable of handling both text and images using Amazon Titan Embeddings, Amazon Bedrock, Amazon Aurora, and LangChain. You generated embeddings, stored the data in both FAISS vector databases and Amazon Aurora Postgre, and developed applications for semantic text and image search.
+In this post, you built a powerful multimodal search engine capable of handling both text and images using Amazon Titan Embeddings, Amazon Bedrock, Amazon Aurora PostgreSQL, and LangChain. You generated embeddings, stored the data in both FAISS vector databases and Amazon Aurora Postgre, and developed applications for semantic text and image search.
 
 Additionally, you deployed a serverless application using AWS CDK with Lambda Functions to integrate embedding and retrieval capabilities through events, providing a scalable solution.
 
