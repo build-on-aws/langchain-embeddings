@@ -170,6 +170,7 @@ def lambda_handler(event, context):
     cur = conn.cursor()
 
     value_cur = cur.execute("CREATE EXTENSION IF NOT EXISTS vector;")
+    conn.commit()
     print(value_cur)
 
     if file_type == "pdf":
