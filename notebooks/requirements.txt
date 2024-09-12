@@ -1,4 +1,12 @@
 boto3
+awscli
+botocore
 langchain
 faiss-cpu
 psycopg2
+langchain-aws
+langchain-community
+langchain_experimental
+pypdf
+numpy
+Pillow
