@@ -4,9 +4,11 @@ botocore
 langchain
 faiss-cpu
 psycopg2
+psycopg
 langchain-aws
 langchain-community
 langchain_experimental
+langchain_postgres
 pypdf
 numpy
 Pillow
