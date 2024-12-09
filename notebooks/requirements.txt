@@ -3,7 +3,7 @@ awscli
 botocore
 langchain
 faiss-cpu
-psycopg2
+psycopg2-binary
 psycopg
 langchain-aws
 langchain-community
