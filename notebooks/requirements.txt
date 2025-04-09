@@ -12,3 +12,7 @@ langchain_postgres
 pypdf
 numpy
 Pillow
+ffmpeg
+tqdm
+pytubefix
+
