@@ -1,44 +1,53 @@
-# Part 1: Building an Amazon Aurora PostgreSQL vector database as a Knowledge Base for Amazon Bedrock.
+# Building an Amazon Aurora PostgreSQL Vector Database
 
-Welcome to the first installment of our four-part series on creating a WhatsApp-powered RAG Travel Support Agent. In this part, we'll dive into the foundational step of our architecture: setting up an Amazon Aurora PostgreSQL vector database. This database will serve as the backbone of our knowledge base for Amazon Bedrock, enabling fast and efficient retrieval of information for our AI-powered travel assistant.
+> This documentation was created with the help of [Generating documentation with Amazon Q Developer](https://docs.aws.amazon.com/amazonq/latest/qdeveloper-ug/doc-generation.html)
+
+
+Learn how to set up an Amazon Aurora PostgreSQL vector database to multimodal vector embeddings, enabling semantic search, using [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk) for Python.
 
 ## The Importance of Vector Databases
 
-Vector databases are crucial for implementing Retrieval Augmented Generation (RAG) systems, as they allow for semantic search capabilities that go beyond traditional keyword matching. By using Amazon Aurora PostgreSQL with vector support, we're leveraging a powerful, scalable, and fully managed database service that's optimized for AI and machine learning workloads.
+Vector databases are essential for implementing Retrieval Augmented Generation (RAG) systems. They provide efficient storage and querying of high-dimensional vector embeddings, enabling semantic search capabilities beyond traditional keyword matching. Amazon Aurora PostgreSQL with vector support and pgvector offers a fully managed database service that's optimized for AI and machine learning workloads.
 
 ## Overview of the Setup Process
 
-In this part, we'll use [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk) for Python to:
+With [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk) for Python, you'll:
 
 1. Set up an Amazon Aurora PostgreSQL Serverless v2 database cluster
 2. Create a database secret
 3. Initialize a custom resource to set up a PostgreSQL table
-4. Grant necessary permissions to the custom resource
-5. Store key information in the [AWS Systems Manager (SSM) Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html).
+4. Configure necessary permissions for the custom resource
+5. Store key information in [AWS Systems Manager (SSM) Parameter Store](https://docs.aws.amazon.com/systems-manager/latest/userguide/systems-manager-parameter-store.html).
 
-Once completed, our Aurora PostgreSQL database will be ready to serve as a Knowledge Base for Amazon Bedrock.
+> When you complete these steps, you can use your Aurora PostgreSQL database as a [Knowledge Base for Amazon Bedrock](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/AuroraPostgreSQL.VectorDB.html).
 
-## Detailed Preparation Steps
 
-Our setup process, automated through an AWS Lambda function via a custom resource in CDK, involves the following key steps:
+## 💰 Costs
+When you use these AWS services, you incur costs for:
 
-![Digrama parte 1](/imagen/part_1.jpg)
+- [Amazon Aurora Pricing](https://aws.amazon.com/rds/aurora/pricing/)
+- [AWS Lambda Pricing](https://aws.amazon.com/lambda/pricing/)
+- [AWS Systems Manager Pricing](https://aws.amazon.com/systems-manager/pricing/)
 
-The preparation consists of the following steps:
+##  Setup Overview
 
-1- Install the pgvector extension (version 0.5.0 or higher):
+he setup uses an AWS Lambda function through a custom resource in CDK, with these key components:
 
+![Architecture diagram - Part 1](images/part_1.jpg)
+
+The preparation includes:
+
+1. Install the pgvector extension (version 0.5.0 or higher):
 ```sql
 CREATE EXTENSION IF NOT EXISTS vector;
 SELECT extversion FROM pg_extension WHERE extname='vector';
 ```
 This enables vector storage and HNSW indexing, crucial for efficient similarity searches.
 
-2- Create a dedicated schema and user role:
-
+2. Create a dedicated schema and user role:
 ```sql
 CREATE SCHEMA bedrock_integration;
-CREATE ROLE bedrock_user WITH PASSWORD password LOGIN;
+CREATE ROLE bedrock_user WITH PASSWORD 'your_secure_password' LOGIN;
 ```
 This segregates our Bedrock-related data and provides controlled access.
 
@@ -48,33 +57,29 @@ GRANT ALL ON SCHEMA bedrock_integration to bedrock_user;
 ```
 This allows the user to manage the schema, including creating tables and indexes.
 
-
 4. Create the knowledge base table:
 ```sql
 CREATE TABLE IF NOT EXISTS bedrock_integration.bedrock_kb (
     id uuid PRIMARY KEY,
-    embedding vector(1024), 
+    embedding vector(1024),
     chunks text,
-    metadata json
+    metadata json,
+    topic text,
+    language varchar(10)
 );
 ```
-This table structure accommodates vector embeddings, text chunks, and associated metadata. You should use vector length [according to the embedding model's](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-supported.html) output dimension. Here we are using 1024 which is compatible with Amazon Titan Embeddings V2 and Cohere Embeddings. 
+This table structure includes:
+- `id`: Unique identifier for each document chunk
+- `embedding`: Vector representation of the text (1024 dimensions for Amazon Titan/Cohere)
+- `chunks`: The actual text content
+- `metadata`: Flexible JSON field for document properties
+- `topic` and `language`: Optional fields for document filtering
 
-If you want to leverage [document metadata for filtering ](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-ds.html#kb-ds-metadata) you need to add those fields as columns. For example, if you need to filter by topic or language, add those columns in advance: 
-
-```sql
-CREATE TABLE IF NOT EXISTS bedrock_integration.bedrock_kb (
-    id uuid PRIMARY KEY, 
-    embedding vector(1024), 
-    chunks text, metadata json, 
-    topic text, language varchar(10)
-);
-```
-
+For more details about metadata filtering, see the [Knowledge Base documentation](https://docs.aws.amazon.com/bedrock/latest/userguide/knowledge-base-ds.html#kb-ds-metadata).
 
 5. Create an index for efficient similarity searches:
 ```sql
-CREATE INDEX on bedrock_integration.bedrock_kb USING hnsw (embedding vector_cosine_ops);
+CREATE INDEX ON bedrock_integration.bedrock_kb USING hnsw (embedding vector_cosine_ops);
 ```
 This HNSW (Hierarchical Navigable Small World) index optimizes cosine similarity searches.
 
@@ -83,69 +88,63 @@ This HNSW (Hierarchical Navigable Small World) index optimizes cosine similarity
 ✅ To set up this infrastructure:
 
 1. Navigate to the project directory:
-```
+```bash
 cd 01-create-aurora-pgvector
 ```
 
 2. Create and activate a virtual environment:
-```
+```bash
 python3 -m venv .venv
 source .venv/bin/activate
 ```
 For Windows:
-```
+```batch
 .venv\Scripts\activate.bat
 ```
 
->[CDK Guide](https://docs.aws.amazon.com/cdk/v2/guide/hello_world.html) 
+> For more information, see the [CDK Guide](https://docs.aws.amazon.com/cdk/v2/guide/hello_world.html)
 
 3. Install the required dependencies:
-```
+```bash
 pip install -r requirements.txt
 ```
 
 4. Deploy the CDK stack (this may take some time):
-```
+```bash
 cdk deploy
 ```
 
 You can monitor the deployment progress in the [AWS CloudFormation console](https://console.aws.amazon.com/cloudformation).
 
-
 ### About the VPC
 
-This stack creates a new VPC, be aware of reaching [service limits](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html) and adjust in advance. Also, since the app uses [RDS Data API](https://docs.aws.amazon.com/rdsdataservice/latest/APIReference/API_ExecuteStatement.html), it doesn't need internet access (nat_gateways = 0)
+This stack creates a new VPC. Be aware of [VPC service limits](https://docs.aws.amazon.com/vpc/latest/userguide/amazon-vpc-limits.html) in your AWS account. The VPC is created with:
 
-
-```python 
-# Crear una VPC
-self.vpc = ec2.Vpc(self, "VPC", max_azs=2, nat_gateways=0)
+```python
+# Create a VPC
+self.vpc = ec2.Vpc(self, "VPC", 
+    max_azs=2,  # Use 2 Availability Zones
+    nat_gateways=0  # Save costs by not using NAT gateways
+)
 ```
-You can use an existing VPC changing the CDK code.
 
-### Take a look at the fresh Aurora Serverless Cluster in the RDS Console
+You can modify the CDK code to use an existing VPC if preferred.
 
-Go to the [RDS Query Editor](https://us-east-1.console.aws.amazon.com/rds/home?region=us-east-1#query-editor:) and access your cluster (using the Database Secret ARN: bedrockSecretXXX)
+### Verify the Aurora Serverless Cluster
 
-Execute `select * from bedrock_integration.knowledge_bases limit 5;` to see the empty table that you just created.
+1. Go to the [RDS Query Editor](https://console.aws.amazon.com/rds/home#query-editor:)
+2. Access your cluster using the Database Secret ARN (`bedrockSecret-xxx`)
+3. Execute the following query to verify the table creation:
+```sql
+SELECT * FROM bedrock_integration.bedrock_kb LIMIT 5;
+```
 
-![alt text](check_aurora.png)
+![RDS Query Editor](images/check_aurora.png)
 
-### Security best practice
+### Security Best Practices
 
-Database credentials are stored as Secrets in [AWS Secrets Manager](https://aws.amazon.com/secrets-manager) which is a service to centrally and securely store and access credentials. Never store credentials in your code or environment variables.
+Database credentials are stored securely in [AWS Secrets Manager](https://aws.amazon.com/secrets-manager/), following AWS security best practices.
 
 
-## 💰 Associated Costs
+> 👾 Note: You can customize the Aurora PostgreSQL Serverless v2 database cluster [settings](https://github.com/aws-samples/aws-cdk-examples/tree/master/python/rds/aurora-serverless-v2) according to your needs.
 
-Be aware of the costs associated with the following AWS services:
-
-- [Amazon Aurora Pricing](https://aws.amazon.com/rds/aurora/pricing/)
-- [Amazon Lambda Pricing](https://aws.amazon.com/lambda/pricing/)
-- [AWS Systems Manager pricing](https://aws.amazon.com/systems-manager/pricing/)
-
-> 👾 Note: You can custom the Aurora PostgreSQL Serverless v2 database cluster [settings](https://github.com/build-on-aws/rag-postgresql-agent-bedrock/blob/main/01-create-aurora-pgvector/rds/rds.py). For more information, refer to the [Requirements and limitations for Aurora Serverless v2](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/aurora-serverless-v2.requirements.html).
-
-## Next Steps
-
-With your Amazon Aurora PostgreSQL vector database now set up, you're ready to move on to the next part of our series, where we'll create a Knowledge Base for Amazon Bedrock using this database. This will bring us one step closer to our goal of building a sophisticated, AI-powered travel support agent.
