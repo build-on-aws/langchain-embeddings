@@ -1,25 +1,32 @@
 ![Diagram](imagens/portada.jpg)
 
-# Building a Multimodal Search Engine for Text and Image with Amazon Titan Embeddings, Amazon Bedrock, Amazon Aurora and LangChain.
+#  Building a Multimodal Search Engine for Text, Image, and Video Content.
 
 > [Getting started with Amazon Bedrock, RAG, and Vector database in Python](https://github.com/build-on-aws/llm-rag-vectordb-python)
 
-This repository demonstrates the construction of a state-of-the-art multimodal search engine, leveraging [Amazon Titan Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html), [Amazon Bedrock](https://aws.amazon.com/bedrock/), and [LangChain](https://python.langchain.com/docs/). It covers the generation of cutting-edge text and image embeddings using Titan's models, unlocking powerful semantic search and retrieval capabilities. Through Jupyter notebooks, the repository guides you through the process of ingesting text from PDFs, generating text embeddings, and segmenting the text into meaningful chunks using LangChain. These embeddings are then stored in a [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database and an [Amazon Aurora](https://aws.amazon.com/rds/aurora/) PostgreSQL database, enabling efficient search and retrieval operations.
+Learn how to build a comprehensive search engine that understands text, images, and video using [Amazon Titan Embeddings](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-embedding-models.html), [Amazon Bedrock](https://aws.amazon.com/bedrock/), [Amazon Nova models](https://docs.aws.amazon.com/nova/) and [LangChain](https://python.langchain.com/docs/). 
 
-Amazon Aurora allows you to maintain both traditional application data and vector embeddings within the same database. This unified approach enhances governance and enables faster deployment, while minimizing the learning curve.
+Through Jupyter notebooks, the repository guides you through the process of [video understanding](https://docs.aws.amazon.com/nova/latest/userguide/modalities-video.html), ingesting text from PDFs, generating text and image embeddings, and segmenting the text into meaningful chunks using LangChain. These embeddings are then stored in a [FAISS](https://python.langchain.com/docs/integrations/vectorstores/faiss/) vector database and an [Amazon Aurora](https://aws.amazon.com/rds/aurora/) PostgreSQL database, enabling efficient search and retrieval operations.
+
+Using Amazon Aurora PostgreSQL, you'll store and manage all vector embeddings in one place, making your content searchable through natural language queries.
+
+## What You'll Build
+
+This project guides you through creating:
+- A text and document processing pipeline and image understanding and search system using [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to create four [AWS Lambda Functions](https://aws.amazon.com/lambda/).
+- A video content analysis solution with a unified vector database for semantic search using [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to deploy  a scalable and modular architecture for processing audio/video content using [Amazon Elastic Container Service (ECS)](https://aws.amazon.com/ecs/).
 
 
-In a second part you'll build a Serveless Embedding APP leverage [AWS Cloud Development Kit (CDK)](https://aws.amazon.com/cdk/) to create four [AWS Lambda Functions](https://aws.amazon.com/lambda/): responsible for embedding text and image files, and for retrieving documents based on text or image queries. These Lambda functions will be designed to be invoked through events invocations, providing a scalable and serverless solution for my multimodal search engine.
+## What You'll Learn
 
-By the end of this post, I'll have a solid understanding of how to:
-
-- Load PDF text and generate text/image embeddings using Amazon Titan Embeddings.
-- Chunk text into semantic segments with LangChain.
-- Create local FAISS vector databases for text and images.
-- Build an image search app leveraging Titan Multimodal Embeddings.  
-- Store vector embeddings in Amazon Aurora PostgreSQL with pgvector extension.
-- Query vector databases for relevant text documents and images.
-- Deploy Lambda functions for embedding/retrieval using AWS CDK.
+By completing this project, you'll know how to:
+- Process and analyze text documents using Amazon Titan Embeddings
+- Generate embeddings for images and enable visual search
+- Extract insights from videos using Amazon Nova models
+- Create semantic chunks from content using LangChain
+- Build vector databases with FAISS and Aurora PostgreSQL
+- Deploy serverless functions for content processing
+- Implement multimodal search capabilities
 
 Get ready to unlock the power of multi-modal search and unlock new possibilities in my apps!
 
@@ -34,6 +41,10 @@ Get ready to unlock the power of multi-modal search and unlock new possibilities
 
 💰 **Cost to complete**: 
 - [Amazon Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
+- [Amazon S3 Pricing](https://aws.amazon.com/s3/pricing/)
+- [Amazon Aurora Pricing](https://aws.amazon.com/rds/aurora/pricing/)
+- [Amazon Transcribe Pricing](https://aws.amazon.com/transcribe/pricing/)
+
 
 ### [Semantic Search with LangChain, Amazon Titan Embeddings, and FAISS](/notebooks/01_build_pdf_vector_db.ipynb):
 
@@ -50,276 +61,27 @@ By following the steps outlined, you'll be able to preprocess images, generate e
 
 In this Jupyter Notebook, you'll explore how to store vector embeddings in a vector database using [Amazon Aurora](https://aws.amazon.com/es/rds/aurora/) and the pgvector extension. This approach is particularly useful for applications that require efficient similarity searches on high-dimensional data, such as natural language processing, image recognition, and recommendation systems.
 
-## Serveless Embedding APP
+### [Video Undestanding](/notebooks/04_video_understanding.ipynb):
 
-💰 **Cost to complete**: 
-- [Amazon Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/)
-- [Amazon Lambda Pricing](https://aws.amazon.com/lambda/pricing/)
-- [Amazon Aurora Pricing](https://aws.amazon.com/rds/aurora/pricing/)
-- [Amazon S3 Pricing](https://aws.amazon.com/s3/pricing/)
+![Diagram](./notebooks/data/video_understanding.png)
 
-In the second part, you'll construct a Serverless Embedding App utilizing the AWS Cloud Development Kit (CDK) to create four Lambda Functions. 
+This Jupyter notebook contains the code to process a video using [Amazon Nova models](https://docs.aws.amazon.com/nova/) to [video understanding](https://docs.aws.amazon.com/nova/latest/userguide/modalities-video.html). If the video is less than 25MB, it is converted to base64, and if it's larger, it is uploaded to an Amazon S3 bucket, which must be added as a variable in **you_bucket**. 
 
->Learn [how test Lambda Functions in the console](https://docs.aws.amazon.com/lambda/latest/dg/testing-functions.html) with test events. 
+### [Video and Audio Content Analysis with Amazon Bedrock and Amazon Aurora PostgreSQL](/notebooks/05_create_audio_video_embeddings.ipynb):
 
-### AWS Lambda Funtions to Generating Embeddings for Text and Image Files:
+![Diagram](./notebooks/data/diagram_video.png)
 
-![Diagram](imagens/part_2_a.jpg)
+This notebook demonstrates how to process video and audio content using Amazon Bedrock with [Amazon Titan Multimodal Embeddings G1 model](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-multiemb-models.html) for generating embeddings and storing them in a existing Amazon Aurora PostgreSQL database with pgvector for similarity search capabilities.
 
-To handle the embedding process, there is a dedicated Lambda Function for each file type:
+> Create Amazon Aurora PostgreSQL with this [Amazon CDK Stack](../create-audio-video-embeddings/02-aurora-pg-vector/README.md)
 
-- [To generate embeddings for the text content of PDF files with FAISS](serveless-embeddings/lambdas/code/build_pdf_vector_db/lambda_function.py). 
+## Serveless embeddings APPs
 
-Event to trigger: 
-
-```json
-{
-    "location": "REPLACE-YOU-KEY",
-    "vectorStoreLocation": "REPALCE-NAME.vdb",
-    "bucketName": "REPLACE-YOU-BUCKET",
-    "vectorStoreType": "faiss",
-    "splitStrategy": "semantic",
-    "fileType": "application/pdf", 
-    "embeddingModel": "amazon.titan-embed-text-v1"
-  }
-```
-| Event  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_1_pdf.jpg)|![Diagram](imagens/result_1_pdf.jpg)|
-|||
-
-- [To generate embeddings for images with FAISS](serveless-embeddings/lambdas/code/build_image_vector_db/lambda_function.py).
-
-Event to trigger: 
-
-```json
-{
-    "location": "REPLACE-YOU-KEY-FOLDER",
-    "vectorStoreLocation": "REPLACE-NAME.vdb",
-    "bucketName": "REPLACE-YOU-BUCKET",
-    "vectorStoreType": "faiss",
-    "splitStrategy": "semantic",
-    "embeddingModel": "amazon.titan-embed-image-v1"
-  }
-```
-
-| Event  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_1_image.jpg)|![Diagram](imagens/result_1_image.jpg)|
-|||
-
-- [To generate embeddings for image/pdf with pgvector and Amazon Aurora](serveless-embeddings/lambdas/code/build_aurora_postgre_vector_db/lambda_function.py).
-
-![Diagram](imagens/event_1_aurora.jpg)
-
-> 💡 Before testing this Lambda Function keep in mind that it must be in the same VPC and be able to access the Amazon Aurora PostreSQL DB, for that check [Automatically connecting a Lambda function and an Aurora DB cluster](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/lambda-rds-connect.html), [Using Amazon RDS Proxy for Aurora](https://docs.aws.amazon.com/AmazonRDS/latest/AuroraUserGuide/rds-proxy.html) and [Use interface VPC endpoints (AWS PrivateLink)](https://docs.aws.amazon.com/bedrock/latest/userguide/usingVPC.html#vpc-interface-endpoints) for Amazon Bedrock VPC endpoint. 
-
-Event to trigger: 
-
-```json
-{
-  "location": "YOU-KEY",
-  "bucketName": "YOU-BUCKET-NAME",
-  "fileType": "pdf or image",
-  "embeddingModel": "amazon.titan-embed-text-v1", 
-  "PGVECTOR_USER":"YOU-RDS-USER",
-  "PGVECTOR_PASSWORD":"YOU-RDS-PASSWORD",
-  "PGVECTOR_HOST":"YOU-RDS-ENDPOINT-PROXY",
-  "PGVECTOR_DATABASE":"YOU-RDS-DATABASE",
-  "PGVECTOR_PORT":"5432",
-  "collectioName": "YOU-collectioName",
-  "bedrock_endpoint": "https://vpce-...-.....bedrock-runtime.YOU-REGION.vpce.amazonaws.com"
-}
-```
-
-| Event PDF  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_4_pdf.jpg)|![Diagram](imagens/response_4_pdf.jpg)|
-|||
-
-| Event Image  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_4_image.jpg)|![Diagram](imagens/response_4_image.jpg)|
-|||
-
-### AWS Lambda Funtions to Query for Text and Image Files in a Vector DB:
-
-![Diagram](imagens/part_2_b.jpg)
-
-To handle the embedding process, there is a dedicated Lambda Function for each file type:
-
-- [To retrieval text content from a vector DB](serveless-embeddings/lambdas/code/pdf_retriever_lambda/lambda_function.py)
-
-Event to trigger: 
-
-```json
-{
-  "vectorStoreLocation": "REPLACE-NAME.vdb",
-  "bucketName": "REPLACE-YOU-BUCKET",
-  "vectorStoreType": "faiss",
-  "query": "YOU-QUERY",
-  "numDocs": 5,
-  "embeddingModel": "amazon.titan-embed-text-v1"
-}
-
-```
-| Event  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_2_pdf.jpg)|![Diagram](imagens/result_2_pdf.jpg)|
-|||
-
-- [To retrieval image location from a vector DB](serveless-embeddings/lambdas/code/pdf_retriever_lambda/lambda_function.py)
-
-You can search by text or by image
-
-- Text event to trigger
-```json
-{
-  "vectorStoreLocation": "REPLACE-NAME.vdb",
-  "bucketName": "REPLACE-YOU-BUCKET",
-  "vectorStoreType": "faiss",
-  "InputType": "text",
-  "query":"TEXT-QUERY",
-  "embeddingModel": "amazon.titan-embed-text-v1"
-}
-```
-
-| Event  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_2_image.jpg)|![Diagram](imagens/result_2_image.jpg)|
-|||
-
-- Image event to trigger
-```json
-{
-  "vectorStoreLocation": "REPLACE-NAME.vdb",
-  "bucketName": "REPLACE-YOU-BUCKET",
-  "vectorStoreType": "faiss",
-  "InputType": "image",
-  "query":"IMAGE-BUCKET-LOCATION-QUERY",
-  "embeddingModel": "amazon.titan-embed-text-v1"
-}
-```
-| Event  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_3_image.jpg)|![Diagram](imagens/result_3_image.jpg)|
-|||
-
-> 💡 The next step is to take the `image_path` value and download the file from Amazon S3 bucket with a [download_file boto3](https://boto3.amazonaws.com/v1/documentation/api/latest/guide/s3-example-download-file.html) method. 
-
-- [To generate embeddings for image/pdf with pgvector and Amazon Aurora](serveless-embeddings/lambdas/code/build_aurora_postgre_vector_db/lambda_function.py).
-
-![Diagram](imagens/response_1_aurora.jpg)
-
-```json
-{
-  "location": "YOU-KEY",
-  "bucketName": "YOU-BUCKET-NAME",
-  "fileType": "pdf or image",
-  "embeddingModel": "amazon.titan-embed-text-v1", 
-  "PGVECTOR_USER":"YOU-RDS-USER",
-  "PGVECTOR_PASSWORD":"YOU-RDS-PASSWORD",
-  "PGVECTOR_HOST":"YOU-RDS-ENDPOINT-PROXY",
-  "PGVECTOR_DATABASE":"YOU-RDS-DATABASE",
-  "PGVECTOR_PORT":"5432",
-  "collectioName": "YOU-collectioName",
-  "bedrock_endpoint": "https://vpce-...-.....bedrock-runtime.YOU-REGION.vpce.amazonaws.com",
-  "QUERY": "YOU-TEXT-QUESTION"
-  }
-```
-
-> 💡 Use `location` and `bucketName`to deliver image location to make a query.
-
-| Event PDF  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_5_pdf.jpg)|![Diagram](imagens/response_5_pdf.jpg)|
-|||
-
-| Event Image Query Text  |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_6_image.jpg)|![Diagram](imagens/response_6_image.jpg)|
-|||
-
-| Event Image Query Image |Executing function: succeeded |
-|---|---|
-|![Diagram](imagens/event_7_image.jpg)|![Diagram](imagens/response_7_image.jpg)|
-|||
-
-### 🚀 Let's build!
-
-The Amazon Lambdas that you build in this deployment are created with a [container images](https://docs.aws.amazon.com/lambda/latest/dg/images-create.html), you must have [Docker Desktop](https://www.docker.com/products/docker-desktop/) installed and active in your computer. 
-
-**Step 1:  APP Set Up**
-
-✅ Clone the repo
-
-```
-git clone https://github.com/build-on-aws/langchain-embeddings
-```
-
-✅ Go to: 
-
-```
-cd serveless-embeddings
-```
-
-- Configure the [AWS Command Line Interface](https://docs.aws.amazon.com/cli/latest/userguide/cli-chap-configure.html)
-
-- Deploy architecture with CDK [Follow steps:](/private-assistant/README.md)
-
-**Step 2: Deploy architecture with CDK.**
-
-✅ Create The Virtual Environment: by following the steps in the [README](/private-assistant/README.md)
-
-```
-python3 -m venv .venv
-```
-
-```
-source .venv/bin/activate
-```
-for windows: 
-
-```
-.venv\Scripts\activate.bat
-```
-
-✅ Install The Requirements:
-
-```
-pip install -r requirements.txt
-```
-
-✅ Synthesize The Cloudformation Template With The Following Command:
-
-```
-cdk synth
-```
-
-✅🚀 The Deployment:
-
-```
-cdk deploy
-```
-
-**🧹 Clean the house!:**
-
-If you finish testing and want to clean the application, you just have to follow these two steps:
-
-1. Delete the files from the Amazon S3 bucket created in the deployment. 
-2. Run this command in your terminal:
-
-```
-cdk destroy
-```
-
-## Conclusion:
-
-In this post, you built a powerful multimodal search engine capable of handling both text and images using Amazon Titan Embeddings, Amazon Bedrock, Amazon Aurora PostgreSQL, and LangChain. You generated embeddings, stored the data in both FAISS vector databases and Amazon Aurora Postgre, and developed applications for semantic text and image search.
-
-Additionally, you deployed a serverless application using AWS CDK with Lambda Functions to integrate embedding and retrieval capabilities through events, providing a scalable solution.
-
-Now you have the tools to create your own multimodal search engines, unlocking new possibilities for your applications. Explore the code, experiment, and share your experiences in the comments.
+| App  |Description|Diagram|
+|---|---|---|
+|[Building an Amazon Aurora PostgreSQL vector database](/create-aurora-pgvector/README.md)|Learn how to set up an Amazon Aurora PostgreSQL vector database to multimodal vector embeddings, enabling semantic search, using AWS Cloud Development Kit (CDK) for Python.|![Diagram](imagens/part_1.jpg)|
+|[Serverless AWS Lamdba Vector Database System for Multi-Modal Document/Image Processing](/serveless-embeddings/README.md)|This serverless solution creates, manages, and queries vector databases for PDF documents and images with Amazon Bedrock embeddings. You can use FAISS vector stores or Aurora PostgreSQL with pgvector for efficient similarity searches across multiple data types.|![Diagram](imagens/event_1_aurora.jpg)|
+|[ Ask Your Video: Audio/Video Processing Pipeline with Vector Search](/create-audio-video-embeddings/README.md)|Build a serverless solution that processes video content and makes it searchable using natural language. This solution extracts meaningful information from both audio and video, allowing you to find specific moments using simple queries|![Diagram](./create-audio-video-embeddings/image/diagram.png)|
 
 ## 🚀 Some links for you to continue learning and building:
 
