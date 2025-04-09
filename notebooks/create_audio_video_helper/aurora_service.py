@@ -1,6 +1,13 @@
 
 import boto3
 
+"""
+This code defines a AuroraPostgres 
+class that interacts with Amazon Aurora PostgreSQL 
+using the AWS RDS Data API.
+
+"""
+
 class AuroraPostgres:
     def __init__(self, cluster_arn, database_name, credentials_arn,region_name):
         self.cluster_arn = cluster_arn

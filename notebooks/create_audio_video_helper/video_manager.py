@@ -3,6 +3,15 @@ import os
 import json
 from urllib.parse import unquote
 
+"""
+- `parse_location()`: Parses S3 URIs into bucket, prefix, filename components
+- `read_json_from_s3()`: Reads JSON files from S3 buckets
+- `download_file()`: Downloads files from S3 to local storage
+- `upload_file()`: Uploads local files to S3
+- `read_image_from_s3()`: Reads image files directly from S3
+- `read_image_from_local()`: Reads image files from local storage
+"""
+
 class VideoManager:
 
     def __init__(self, s3_uri,region_name):

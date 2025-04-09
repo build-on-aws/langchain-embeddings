@@ -3,6 +3,18 @@ from datetime import datetime
 import math
 import time
 
+"""
+Implements functions for:
+- `transcribe()`: Starts transcription jobs with Amazon Transcribe
+- `wait_transcription_complete()`: Waits for job completion with status polling
+- `get_transcribe_result_data()`: Gets transcription job status and results
+- `process_part()`: Processes individual parts of the transcript
+- `process_segments()`: Processes transcript segments with timing information
+- `combine_by_seconds()`: Combines transcript segments by time
+- `combine_transcrip_segments_by_speaker()`: Combines segments by speaker for better readability
+- `process_transcript()`: Main function to process the complete transcript
+"""
+
 class AudioProcessing:
     def __init__(self,region_name,videomanager):
         self.videomanager = videomanager
@@ -98,7 +110,7 @@ class AudioProcessing:
             ]
         return destilled_segments, ending_times[-1]
 
-    def combine_by_seconds(segments):
+    def combine_by_seconds(self, segments):
         combined = []
         current_time, current_speaker, current_content = segments[0]
         for start_time, speaker, content in segments[1:]:

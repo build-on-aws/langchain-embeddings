@@ -2,6 +2,12 @@ import shutil
 import os
 import subprocess
 
+"""
+extract_sec_number(): Extracts second numbers from file paths for frame ordering
+ffmpeg_check(): Checks if ffmpeg is installed on the system
+run_ffmpeg_command(): Runs ffmpeg commands with proper error handling
+extract_frames(): Extracts video frames at regular intervals using ffmpeg
+"""
 class VideoProcessor:
 
     def extract_sec_number(self,filepath: str) -> int:
@@ -42,6 +48,7 @@ class VideoProcessor:
         os.makedirs(output_dir, exist_ok=True)
         print ("processing frames...")
         
+        #personalize the frame rate by changing the FPS 
         command = [
             'ffmpeg',
             '-v', 'quiet',

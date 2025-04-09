@@ -5,6 +5,17 @@ import json
 import uuid
 from tqdm import tqdm
 
+"""
+- `get_image_embeddings()`: Generates embeddings for images using Amazon Bedrock
+- `get_images_embeddings()`: Processes multiple images with progress bars
+- `get_embeddings()`: Generic function that handles both text and image embedding generation
+- `get_text_embeddings()`: Generates embeddings for text using Amazon Bedrock
+- `create_text_embeddings()`: Creates structured embedding records for transcribed text
+- `create_frames_embeddings()`: Creates structured embedding records for video frames
+
+
+"""
+
 class EmbeddingGeneration:
     def __init__(self,videomanager,region_name,default_model_id,embedding_dimension):
         self.videomanager = videomanager
