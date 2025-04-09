@@ -4,3 +4,4 @@ from create_audio_video_helper.video_manager import VideoManager
 from create_audio_video_helper.audio_processing import AudioProcessing
 from create_audio_video_helper.embedding_generation import EmbeddingGeneration
 from create_audio_video_helper.compare_frames import CompareFrames
+from create_audio_video_helper.video_s3_uploader import UploadVideoS3
