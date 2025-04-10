@@ -73,7 +73,7 @@ This Jupyter notebook contains the code to process a video using [Amazon Nova mo
 
 This notebook demonstrates how to process video and audio content using Amazon Bedrock with [Amazon Titan Multimodal Embeddings G1 model](https://docs.aws.amazon.com/bedrock/latest/userguide/titan-multiemb-models.html) for generating embeddings and storing them in a existing Amazon Aurora PostgreSQL database with pgvector for similarity search capabilities.
 
-> Create Amazon Aurora PostgreSQL with this [Amazon CDK Stack](../create-audio-video-embeddings/02-aurora-pg-vector/README.md)
+> Create Amazon Aurora PostgreSQL with this [Amazon CDK Stack](https://github.com/build-on-aws/langchain-embeddings/blob/main/create-aurora-pgvector/README.md)
 
 ## Serveless embeddings APPs
 
