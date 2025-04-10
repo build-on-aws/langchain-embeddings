@@ -4,9 +4,13 @@ import json
 import requests
 import boto3
 from pg_rds_api_help import PGSetup
-
+import logging  # import logging
 
 client = boto3.client('rds-data')
+
+# Configure logging
+logging.basicConfig(level=logging.INFO)
+logger = logging.getLogger(__name__)
 
 def lambda_handler(event, context):
     '''Handle Lambda event from AWS'''
@@ -14,28 +18,36 @@ def lambda_handler(event, context):
     # signal.alarm((context.get_remaining_time_in_millis() / 1000) - 1)
     try:
        
-        print('REQUEST RECEIVED:', event)
-        print('REQUEST RECEIVED:', context)
+        logger.info('REQUEST RECEIVED: %s', event)
+        logger.info('REQUEST RECEIVED: %s', context)
         if event['RequestType'] == 'Create':
-            print('CREATE!')
+            logger.info('CREATE!')
             event['PhysicalResourceId'] = 'NOT_YET'
             create(event, context)
         elif event['RequestType'] == 'Update':
-            print('UPDATE!')
+            logger.info('UPDATE!')
             create(event, context)
 
         elif event['RequestType'] == 'Delete':
-            print('DELETE!')
+            logger.info('DELETE!')
             delete(event, context)
            
         else:
-            print('FAILED!')
+            logger.error('FAILED!')
             send_response(event, context, "FAILED",
                           {"Message": "Unexpected event received from CloudFormation"})
-    except Exception as error: 
-        print('FAILED!', error)
+    except ValueError as error:
+        logger.error('FAILED! ValueError: %s', error)
         send_response(event, context, "FAILED", {
-            "Message": "Exception during processing"})
+            "Message": f"ValueError during processing: {error}"})
+    except KeyError as error:
+        print('FAILED! KeyError:', error)
+        send_response(event, context, "FAILED", {
+            "Message": f"KeyError during processing: {error}"})
+    except Exception as error: 
+        print('FAILED! Unexpected error:', error)
+        send_response(event, context, "FAILED", {
+            "Message": f"Unexpected exception during processing: {error}"})
 
 
 def create(event, context):
@@ -89,15 +101,18 @@ def delete(event, context):
 
 def send_response(event, context, response_status, response_data):
     '''Send a resource manipulation status response to CloudFormation'''
-    response_body = json.dumps({
-        "Status": response_status,
-        "Reason": "See the details in CloudWatch Log Stream: " + context.log_stream_name,
-        "PhysicalResourceId": event['PhysicalResourceId'] if 'PhysicalResourceId' in event else "NOPHYID",
-        "StackId": event['StackId'],
-        "RequestId": event['RequestId'],
-        "LogicalResourceId": event['LogicalResourceId'],
-        "Data": response_data
-    })
+    def create_response_body():
+        return {
+            "Status": response_status,
+            "Reason": "See the details in CloudWatch Log Stream: " + context.log_stream_name,
+            "PhysicalResourceId": event.get('PhysicalResourceId', "NOPHYID"),
+            "StackId": event['StackId'],
+            "RequestId": event['RequestId'],
+            "LogicalResourceId": event['LogicalResourceId'],
+            "Data": response_data
+        }
+
+    response_body = json.dumps(create_response_body())
     headers = {
     'Content-Type': 'application/json',  
     'Content-Length': str(len(response_body))

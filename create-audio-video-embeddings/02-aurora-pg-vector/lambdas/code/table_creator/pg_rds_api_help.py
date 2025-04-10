@@ -29,7 +29,7 @@ class PGSetup():
         self.create_tables()
 
     def create_tables(self):
-        table_name = self.table_name
+        table_name = self.sanitize_table_name(self.table_name)
         sql = f"CREATE TABLE IF NOT EXISTS bedrock_integration.{table_name} (id uuid PRIMARY KEY, embedding vector(1024), chunks text, time integer, metadata json, \"date\" text, source text, sourceurl text, topic text, content_type text, language varchar(10));"
 
         response = self.client.execute_statement(
@@ -40,8 +40,7 @@ class PGSetup():
             formatRecordsAs='JSON'
         )
         del response['ResponseMetadata']
-        print(f"CREATE TABLE  : {response}")
-
+        logging.info(f"CREATE TABLE  : {response}") # import logging
 
         response2 = self.client.execute_statement(
             resourceArn=self.cluster_arn, 
@@ -51,14 +50,14 @@ class PGSetup():
             formatRecordsAs='JSON'
         )
         del response2['ResponseMetadata']
-        print(f"CREATE INDEX  : {response2}")
+        logging.info(f"CREATE INDEX  : {response2}") # import logging
 
         return response2
 
     
     def grant_privileges(self):
         sql = f'GRANT ALL ON SCHEMA bedrock_integration to {self.user}'
-        print(f"{sql} :", end="")
+        logging.info(f"{sql} :") # import logging
         response = self.client.execute_statement(
             resourceArn=self.cluster_arn,
             secretArn=self.secrets_arn,
@@ -67,7 +66,7 @@ class PGSetup():
             formatRecordsAs='JSON'
         )
         del response['ResponseMetadata']
-        print("Privileges granted successfully")
+        logging.info("Privileges granted successfully") # import logging
         return response
 
 

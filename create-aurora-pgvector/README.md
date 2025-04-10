@@ -89,7 +89,7 @@ This HNSW (Hierarchical Navigable Small World) index optimizes cosine similarity
 
 1. Navigate to the project directory:
 ```bash
-cd 01-create-aurora-pgvector
+cd create-aurora-pgvector
 ```
 
 2. Create and activate a virtual environment:
