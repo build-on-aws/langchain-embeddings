@@ -81,7 +81,7 @@ This notebook demonstrates how to process video and audio content using Amazon B
 |---|---|---|
 |[Building an Amazon Aurora PostgreSQL vector database](/create-aurora-pgvector/README.md)|Learn how to set up an Amazon Aurora PostgreSQL vector database to multimodal vector embeddings, enabling semantic search, using AWS Cloud Development Kit (CDK) for Python.|![Diagram](imagens/part_1.jpg)|
 |[Serverless AWS Lamdba Vector Database System for Multi-Modal Document/Image Processing](/serveless-embeddings/README.md)|This serverless solution creates, manages, and queries vector databases for PDF documents and images with Amazon Bedrock embeddings. You can use FAISS vector stores or Aurora PostgreSQL with pgvector for efficient similarity searches across multiple data types.|![Diagram](imagens/event_1_aurora.jpg)|
-|[ Ask Your Video: Audio/Video Processing Pipeline with Vector Search](/create-audio-video-embeddings/README.md)|Build a serverless solution that processes video content and makes it searchable using natural language. This solution extracts meaningful information from both audio and video, allowing you to find specific moments using simple queries|![Diagram](./create-audio-video-embeddings/image/diagram.png)|
+|[ Ask Your Video: Audio/Video Processing Pipeline with Vector Search](https://github.com/elizabethfuentes12/create-audio-video-embeddings)|Build a serverless solution that processes video content and makes it searchable using natural language. This solution extracts meaningful information from both audio and video, allowing you to find specific moments using simple queries|![Diagram](https://github.com/elizabethfuentes12/create-audio-video-embeddings/image/diagram.png)|
 
 ## 🚀 Some links for you to continue learning and building:
 
