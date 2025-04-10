@@ -24,7 +24,7 @@ class PGSetup():
         self.create_tables()
 
     def create_tables(self):
-        table_name = self.table_name
+        table_name = self.sanitize_table_name(self.table_name)
         sql = f"CREATE TABLE IF NOT EXISTS bedrock_integration.{table_name} (id uuid PRIMARY KEY, embedding vector(1024), chunks text, metadata json, \"date\" text, source text, topic text, language varchar(10));"
 
         response = self.client.execute_statement(

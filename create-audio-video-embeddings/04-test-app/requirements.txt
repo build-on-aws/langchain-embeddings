@@ -1,5 +1,0 @@
-boto3
-awscli
-json
-base64
-uuid

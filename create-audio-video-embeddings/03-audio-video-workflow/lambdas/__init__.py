@@ -1,1 +1,0 @@
-from lambdas.project_lambdas import Lambdas, BASE_LAMBDA_CONFIG

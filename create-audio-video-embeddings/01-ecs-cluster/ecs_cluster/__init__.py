@@ -1,2 +1,0 @@
-
-from ecs_cluster.ecs_cluster_stack import EcsClusterStack
