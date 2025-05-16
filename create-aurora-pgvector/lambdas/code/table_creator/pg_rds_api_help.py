@@ -34,10 +34,7 @@ class PGSetup():
             database=self.database_name,
             formatRecordsAs='JSON'
         )
-        if response.get('ResponseMetadata') is not None:
-            del response['ResponseMetadata']
-        else:
-            raise TypeError("Response metadata could not be retrieved due to NoneType response.")
+        del response['ResponseMetadata']
         print(f"CREATE TABLE  : {response}")
 
 
@@ -48,30 +45,10 @@ class PGSetup():
             database=self.database_name,
             formatRecordsAs='JSON'
         )
-        if response2.get('ResponseMetadata') is not None:
-            del response2['ResponseMetadata']
-        else:
-            raise TypeError("Response metadata could not be retrieved due to NoneType response.")
+        del response2['ResponseMetadata']
         print(f"CREATE INDEX  : {response2}")
 
         return response2
-    
-    def create_table_multimodal(self):
-        table_name = self.sanitize_table_name(self.table_name)
-        sql = f"CREATE TABLE IF NOT EXISTS bedrock_integration.{table_name} (id uuid PRIMARY KEY, embedding vector(1024), text TEXT, chunks text, metadata json, \"date\" text, source text, topic text, language varchar(10));"
-
-        response = self.client.execute_statement(
-            resourceArn=self.cluster_arn,
-            secretArn=self.credentials_arn,
-            sql=sql,
-            database=self.database_name,
-            formatRecordsAs='JSON'
-        )
-        del response['ResponseMetadata']
-        print(f"CREATE TABLE  : {response}")
-
-        return response
-
 
     
     def grant_privileges(self):
@@ -84,10 +61,7 @@ class PGSetup():
             database=self.database_name,
             formatRecordsAs='JSON'
         )
-        if response.get('ResponseMetadata') is not None:
-            del response['ResponseMetadata']
-        else:
-            print("Response metadata not found")
+        del response['ResponseMetadata']
         print (response)
         return response
 
@@ -102,10 +76,10 @@ class PGSetup():
                 formatRecordsAs='JSON'
             )
             del response['ResponseMetadata']
-            print("CREATE ROLE bedrock_user : Success")
+            print(f"CREATE ROLE bedrock_user : {response}")
             return response
         except self.client.exceptions.DatabaseErrorException as e:
-            print("CREATE ROLE bedrock_user : Error occurred")
+            print(f"CREATE ROLE bedrock_user : {e}")
             return e
 
     def create_schema(self):
@@ -117,10 +91,7 @@ class PGSetup():
             database=self.database_name,
             formatRecordsAs='JSON'
         )
-        if response.get('ResponseMetadata') is not None:
-            del response['ResponseMetadata']
-        else:
-            raise TypeError("Response metadata could not be retrieved due to NoneType response.")
+        del response['ResponseMetadata']
         print(f"{sql} : {response}")
         return response
 
@@ -137,3 +108,17 @@ class PGSetup():
         print(f"{sql} : {response}")
         return response
     
+
+
+    """
+    select id, chunks, metadata, "date", source, topic, language  from bedrock_integration.knowledge_bases where topic is null limit 5;
+    drop table bedrock_integration.knowledge_bases;
+
+
+    CREATE TABLE IF NOT EXISTS bedrock_integration.knowledge_bases (id uuid PRIMARY KEY, embedding vector(1024), chunks text, metadata json, "date" text, source text, topic text, language varchar(10));
+
+    CREATE INDEX on bedrock_integration.knowledge_bases USING hnsw (embedding vector_cosine_ops);
+
+    SELECT column_name, data_type, character_maximum_length FROM information_schema. columns WHERE table_name = 'knowledge_bases';
+    
+    """
