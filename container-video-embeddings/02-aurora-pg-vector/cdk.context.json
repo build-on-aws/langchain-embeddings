@@ -1,0 +1,134 @@
+{
+  "vpc-provider:account=222634367169:filter.vpc-id=vpc-0773f2bf9ad0ddae0:region=us-east-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0773f2bf9ad0ddae0",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "ownerAccountId": "222634367169",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-02ee0ad1598b35f23",
+            "cidr": "10.0.0.0/18",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-0418062f634337334"
+          },
+          {
+            "subnetId": "subnet-0eb0324acece0a8b6",
+            "cidr": "10.0.64.0/18",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-0e152d35ae341fbda"
+          }
+        ]
+      },
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-01db1f7d712706d29",
+            "cidr": "10.0.128.0/18",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-067d4e41afba54198"
+          },
+          {
+            "subnetId": "subnet-008e2ee7944339415",
+            "cidr": "10.0.192.0/18",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-0c4deaf201a4f0b8d"
+          }
+        ]
+      }
+    ]
+  },
+  "vpc-provider:account=222634367169:filter.vpc-id=vpc-0b5b9ceca0e13fb67:region=us-east-1:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0b5b9ceca0e13fb67",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "ownerAccountId": "222634367169",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-067a0bcf80cdd2df3",
+            "cidr": "10.0.128.0/18",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-08b89929231a5eda2"
+          },
+          {
+            "subnetId": "subnet-04624af199060e8f8",
+            "cidr": "10.0.192.0/18",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-0bfd97aed304006a7"
+          }
+        ]
+      },
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0994668bea93e5a33",
+            "cidr": "10.0.0.0/18",
+            "availabilityZone": "us-east-1a",
+            "routeTableId": "rtb-021be476c083e3fa4"
+          },
+          {
+            "subnetId": "subnet-00cf9f730cb2240ea",
+            "cidr": "10.0.64.0/18",
+            "availabilityZone": "us-east-1b",
+            "routeTableId": "rtb-00d79d9001040ccaa"
+          }
+        ]
+      }
+    ]
+  },
+  "vpc-provider:account=147997153889:filter.vpc-id=vpc-0489bf9f8fa47fa3d:region=us-west-2:returnAsymmetricSubnets=true": {
+    "vpcId": "vpc-0489bf9f8fa47fa3d",
+    "vpcCidrBlock": "10.0.0.0/16",
+    "ownerAccountId": "147997153889",
+    "availabilityZones": [],
+    "subnetGroups": [
+      {
+        "name": "Public",
+        "type": "Public",
+        "subnets": [
+          {
+            "subnetId": "subnet-0875a93dede2d9e06",
+            "cidr": "10.0.0.0/18",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-0e252ea4dd0d0fb85"
+          },
+          {
+            "subnetId": "subnet-08b8e74a2cc8f2d55",
+            "cidr": "10.0.64.0/18",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-013bb6bb5b1bdee96"
+          }
+        ]
+      },
+      {
+        "name": "Private",
+        "type": "Private",
+        "subnets": [
+          {
+            "subnetId": "subnet-0aa2e4da07de78680",
+            "cidr": "10.0.128.0/18",
+            "availabilityZone": "us-west-2a",
+            "routeTableId": "rtb-08883e64d49b349f1"
+          },
+          {
+            "subnetId": "subnet-0e059d10623efe716",
+            "cidr": "10.0.192.0/18",
+            "availabilityZone": "us-west-2b",
+            "routeTableId": "rtb-08747da86296393d5"
+          }
+        ]
+      }
+    ]
+  }
+}
