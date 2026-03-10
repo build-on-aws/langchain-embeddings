@@ -6,7 +6,7 @@ EVENT
     "bucketName": "YOU-BUCKET",
     "fileType": "image or pdf",
     "embeddingModel": "amazon.titan-embed-image-v1", 
-    "llmModel": "anthropic.claude-3-sonnet-20240229-v1:0",
+    "llmModel": "anthropic.claude-sonnet-4-20250514-v1:0",
     "QUERY": "YOU QUESTION",
     "PGVECTOR_USER":"PGVECTOR_USER",
     "PGVECTOR_PASSWORD":"PGVECTOR_PASSWORD",

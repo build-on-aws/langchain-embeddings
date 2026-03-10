@@ -114,7 +114,7 @@ def _process_video(video_path: str, user_id: str, similarity_threshold: float,
             
             # 5. Generate embeddings for all frames
             print("🧠 Generating frame embeddings...")
-            default_model_id = "amazon.titan-embed-image-v1"
+            default_model_id = "amazon.nova-2-multimodal-embeddings-v1:0"
             default_embedding_dimension = 1024
             embedding_generation = EmbeddingGeneration(videomanager, region, default_model_id, default_embedding_dimension)
             embed_1024 = embedding_generation.get_images_embeddings(files)
@@ -189,7 +189,7 @@ def _search_videos(query: str, aurora: AuroraPostgres, region: str) -> Dict[str,
     try:
         # Create VideoManager and EmbeddingGeneration exactly like notebook 05
         temp_videomanager = VideoManager("s3://temp/temp.mp4", region)
-        embedding_generation = EmbeddingGeneration(temp_videomanager, region, "amazon.titan-embed-image-v1", 1024)
+        embedding_generation = EmbeddingGeneration(temp_videomanager, region, "amazon.nova-2-multimodal-embeddings-v1:0", 1024)
         
         # Generate embedding for query exactly like notebook 05
         search_vector = embedding_generation.get_embeddings(query)

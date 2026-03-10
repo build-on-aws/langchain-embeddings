@@ -70,16 +70,57 @@
 
 | 🔧 Service | 🎯 Purpose | ⚡ Key Capabilities |
 |-------------|------------|---------------------|
-| **[Amazon Bedrock](https://aws.amazon.com/bedrock/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | AI model access | Titan Embeddings, Nova models for multimodal processing |
-| **[Amazon Aurora PostgreSQL](https://aws.amazon.com/rds/aurora/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Vector database | pgvector extension for similarity search operations |
-| **[AWS Lambda](https://aws.amazon.com/lambda/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Serverless compute | Event-driven document and image processing |
-| **[Amazon ECS](https://aws.amazon.com/ecs/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Container orchestration | Scalable video processing workflows |
-| **[Amazon S3](https://aws.amazon.com/s3/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Object storage | Document, image, and video content storage |
-| **[Amazon Transcribe](https://aws.amazon.com/transcribe/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Speech-to-text | Audio content extraction from video files |
-| **[AWS Step Functions](https://aws.amazon.com/step-functions/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Workflow orchestration | Complex multi-step video processing |
-| **[Amazon API Gateway](https://aws.amazon.com/api-gateway/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | API management | RESTful endpoints for search operations |
+| **[Amazon Bedrock](https://aws.amazon.com/bedrock/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | AI model access | Nova Multimodal Embeddings (`amazon.nova-2-multimodal-embeddings-v1:0`), Nova models for multimodal processing |
+| **[Amazon Aurora PostgreSQL](https://aws.amazon.com/rds/aurora/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Vector database | pgvector extension for similarity search operations |
+| **[AWS Lambda](https://aws.amazon.com/lambda/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Serverless compute | Event-driven document and image processing |
+| **[Amazon ECS](https://aws.amazon.com/ecs/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Container orchestration | Scalable video processing workflows |
+| **[Amazon S3](https://aws.amazon.com/s3/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Object storage | Document, image, and video content storage |
+| **[Amazon Transcribe](https://aws.amazon.com/transcribe/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Speech-to-text | Audio content extraction from video files |
+| **[AWS Step Functions](https://aws.amazon.com/step-functions/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Workflow orchestration | Complex multi-step video processing |
+| **[Amazon API Gateway](https://aws.amazon.com/api-gateway/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | API management | RESTful endpoints for search operations |
 
 
+
+---
+
+## ⚠️ Compatibility Notes
+
+### Embedding Model: Amazon Nova Multimodal Embeddings
+
+This project uses **`amazon.nova-2-multimodal-embeddings-v1:0`** as the embedding model. Nova uses a different API format than the previous Titan models — requests must use the `taskType`/`singleEmbeddingParams` structure instead of the old `inputText`/`inputImage` fields.
+
+### Do not use `BedrockEmbeddings` from LangChain for Nova
+
+The `BedrockEmbeddings` class from `langchain_community.embeddings` internally uses the **Titan API format** and is **not compatible** with Amazon Nova Embeddings. Using it with `amazon.nova-2-multimodal-embeddings-v1:0` will result in a `ValidationException` from Bedrock.
+
+**Avoid:**
+```python
+# ❌ Does NOT work with Nova
+from langchain_community.embeddings import BedrockEmbeddings
+embeddings = BedrockEmbeddings(model_id="amazon.nova-2-multimodal-embeddings-v1:0", client=bedrock_client)
+```
+
+**Use instead — direct boto3 with Nova format:**
+```python
+# ✅ Correct Nova API format
+body = json.dumps({
+    "taskType": "SINGLE_EMBEDDING",
+    "singleEmbeddingParams": {
+        "embeddingPurpose": "GENERIC_INDEX",
+        "embeddingDimension": 1024,
+        "text": {"value": text, "truncationMode": "END"},
+    },
+})
+response = bedrock_runtime.invoke_model(
+    body=body,
+    modelId="amazon.nova-2-multimodal-embeddings-v1:0",
+    accept="application/json",
+    contentType="application/json",
+)
+embedding = json.loads(response["body"].read())["embedding"]
+```
+
+> **Note:** The [Serverless Lambda](serveless-embeddings/) module still uses `BedrockEmbeddings` for legacy PDF/text workflows. If you extend those Lambdas with Nova embeddings, replace `BedrockEmbeddings` with direct boto3 calls using the format above.
 
 ---
 
@@ -87,11 +128,11 @@
 
 | 💰 Service | 💵 Approximate Cost | 📊 Usage Pattern | 🔗 Pricing Link |
 |-------------|---------------------|------------------|------------------|
-| Amazon Bedrock | ~$0.10 per 1K tokens | Text/image embeddings | [Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el) |
-| Aurora PostgreSQL | ~$0.08/hour | Vector database operations | [Aurora Pricing](https://aws.amazon.com/rds/aurora/pricing/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el) |
+| Amazon Bedrock | ~$0.10 per 1K tokens | Text/image embeddings | [Bedrock Pricing](https://aws.amazon.com/bedrock/pricing/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el) |
+| Aurora PostgreSQL | ~$0.08/hour | Vector database operations | [Aurora Pricing](https://aws.amazon.com/rds/aurora/pricing/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el) |
 | AWS Lambda | ~$0.0001/request | API endpoint calls | Included in AWS Free Tier |
-| Amazon S3 | ~$0.023/GB/month | Content storage | [S3 Pricing](https://aws.amazon.com/s3/pricing/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el) |
-| Amazon Transcribe | ~$0.024/minute | Audio processing | [Transcribe Pricing](https://aws.amazon.com/transcribe/pricing/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el) |
+| Amazon S3 | ~$0.023/GB/month | Content storage | [S3 Pricing](https://aws.amazon.com/s3/pricing/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el) |
+| Amazon Transcribe | ~$0.024/minute | Audio processing | [Transcribe Pricing](https://aws.amazon.com/transcribe/pricing/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el) |
 
 > 💡 Start with notebooks for local development at no cost, then explore AWS services within Free Tier limits.
 

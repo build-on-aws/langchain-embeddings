@@ -4,7 +4,7 @@ import boto3
 import os
 
 bedrock_runtime = boto3.client(service_name="bedrock-runtime")
-default_model_id = os.environ.get("DEFAULT_MODEL_ID", "amazon.titan-embed-image-v1")
+default_model_id = os.environ.get("DEFAULT_MODEL_ID", "amazon.nova-2-multimodal-embeddings-v1:0")
 default_embedding_dimmesion = os.environ.get("DEFAULT_EMBEDDING_DIMENSION", "1024")
 
 
@@ -14,7 +14,14 @@ def get_image_embeddings(path_to_image, model_id:str = default_model_id, embeddi
     with open(path_to_image, "rb") as image_file:
         input_image = base64.b64encode(image_file.read()).decode('utf8')
 
-    body = json.dumps({"inputImage": input_image,"embeddingConfig": { "outputEmbeddingLength": embedding_dimmesion}})
+    body = json.dumps({
+        "taskType": "SINGLE_EMBEDDING",
+        "singleEmbeddingParams": {
+            "embeddingPurpose": "GENERIC_INDEX",
+            "embeddingDimension": embedding_dimmesion,
+            "image": {"format": "jpeg", "source": {"bytes": input_image}},
+        },
+    })
 
 
     response = bedrock_runtime.invoke_model(

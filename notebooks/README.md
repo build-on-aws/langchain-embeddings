@@ -33,10 +33,10 @@ Learn multimodal AI through practical tutorials that demonstrate text, image, an
 
 | 🔧 Service | 🎯 Purpose | ⚡ Key Capabilities |
 |-------------|------------|---------------------|
-| **[Amazon Bedrock](https://aws.amazon.com/bedrock/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | AI model access | Titan Embeddings, Nova models for multimodal processing |
-| **[Amazon Aurora PostgreSQL](https://aws.amazon.com/rds/aurora/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Vector database | pgvector extension for similarity search operations |
-| **[Amazon S3](https://aws.amazon.com/s3/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Object storage | Document, image, and video content storage |
-| **[Amazon Transcribe](https://aws.amazon.com/transcribe/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)** | Speech-to-text | Audio content extraction from video files |
+| **[Amazon Bedrock](https://aws.amazon.com/bedrock/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | AI model access | Titan Embeddings, Nova models for multimodal processing |
+| **[Amazon Aurora PostgreSQL](https://aws.amazon.com/rds/aurora/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Vector database | pgvector extension for similarity search operations |
+| **[Amazon S3](https://aws.amazon.com/s3/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Object storage | Document, image, and video content storage |
+| **[Amazon Transcribe](https://aws.amazon.com/transcribe/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)** | Speech-to-text | Audio content extraction from video files |
 
 ---
 
@@ -55,7 +55,7 @@ Learn multimodal AI through practical tutorials that demonstrate text, image, an
 ```
 
 **🔑 AWS Credentials Setup:**
-Follow the [AWS credentials configuration guide](https://docs.aws.amazon.com/braket/latest/developerguide/braket-using-boto3.html?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el) to configure your environment.
+Follow the [AWS credentials configuration guide](https://docs.aws.amazon.com/braket/latest/developerguide/braket-using-boto3.html?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el) to configure your environment.
 
 ---
 
@@ -97,7 +97,7 @@ Complete notebooks 01-07 in sequence for the best learning experience.
 | **04-05** | Bedrock, Transcribe, S3 |
 | **06-07** | Full stack | 
 
-> 💡 **Pro Tip:** Use AWS Free Tier when possible and monitor costs through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el).
+> 💡 **Pro Tip:** Use AWS Free Tier when possible and monitor costs through [AWS Cost Explorer](https://aws.amazon.com/aws-cost-management/aws-cost-explorer/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el).
 
 ---
 
@@ -114,7 +114,7 @@ Complete notebooks 01-07 in sequence for the best learning experience.
 
 ## 🔗 Additional Learning Resources
 
-- 📖 [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/?trk=4f1e9f0e-7b21-4369-8925-61f67341d27c&sc_channel=el)
+- 📖 [Amazon Bedrock Documentation](https://docs.aws.amazon.com/bedrock/?trk=87c4c426-cddf-4799-a299-273337552ad8&sc_channel=el)
 - 🦜 [LangChain Python Documentation](https://python.langchain.com/)
 - 🔍 [FAISS Documentation](https://faiss.ai/)
 - 🗄️ [pgvector Documentation](https://github.com/pgvector/pgvector)

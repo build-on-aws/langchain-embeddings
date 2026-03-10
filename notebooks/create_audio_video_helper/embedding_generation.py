@@ -27,7 +27,14 @@ class EmbeddingGeneration:
 
         input_image = base64.b64encode(image_bytes).decode('utf8')
 
-        body = json.dumps({"inputImage": input_image, "embeddingConfig": {"outputEmbeddingLength": self.embedding_dimension}})
+        body = json.dumps({
+            "taskType": "SINGLE_EMBEDDING",
+            "singleEmbeddingParams": {
+                "embeddingPurpose": "GENERIC_INDEX",
+                "embeddingDimension": self.embedding_dimension,
+                "image": {"format": "jpeg", "source": {"bytes": input_image}},
+            },
+        })
         response = self.bedrock_runtime.invoke_model(
             body=body,
             modelId=self.default_model_id,
@@ -74,7 +81,14 @@ class EmbeddingGeneration:
         return text_embeddings
 
     def get_text_embeddings(self,text):
-        body = json.dumps({"inputText": text, "embeddingConfig": {"outputEmbeddingLength": self.embedding_dimension}})
+        body = json.dumps({
+            "taskType": "SINGLE_EMBEDDING",
+            "singleEmbeddingParams": {
+                "embeddingPurpose": "GENERIC_INDEX",
+                "embeddingDimension": self.embedding_dimension,
+                "text": {"value": text, "truncationMode": "END"},
+            },
+        })
         response = self.bedrock_runtime.invoke_model(
             body=body,
             modelId=self.default_model_id,
